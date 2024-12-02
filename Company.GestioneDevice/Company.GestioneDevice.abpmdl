@@ -1,0 +1,105 @@
+{
+  "template": "app",
+  "imports": {
+    "Volo.Abp.BasicTheme": {
+      "version": "9.0.0",
+      "isInstalled": true
+    },
+    "Volo.Abp.Account": {
+      "version": "9.0.0",
+      "isInstalled": true
+    },
+    "Volo.Abp.OpenIddict": {
+      "version": "9.0.0",
+      "isInstalled": true
+    },
+    "Volo.Abp.Identity": {
+      "version": "9.0.0",
+      "isInstalled": true
+    },
+    "Volo.Abp.TenantManagement": {
+      "version": "9.0.0",
+      "isInstalled": true
+    },
+    "Volo.Abp.SettingManagement": {
+      "version": "9.0.0",
+      "isInstalled": true
+    },
+    "Volo.Abp.PermissionManagement": {
+      "version": "9.0.0",
+      "isInstalled": true
+    },
+    "Volo.Abp.FeatureManagement": {
+      "version": "9.0.0",
+      "isInstalled": true
+    }
+  },
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {}
+    }
+  },
+  "packages": {
+    "Company.GestioneDevice.Application": {
+      "path": "src/Company.GestioneDevice.Application/Company.GestioneDevice.Application.abppkg",
+      "folder": "src"
+    },
+    "Company.GestioneDevice.Application.Tests": {
+      "path": "test/Company.GestioneDevice.Application.Tests/Company.GestioneDevice.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "Company.GestioneDevice.Domain.Shared": {
+      "path": "src/Company.GestioneDevice.Domain.Shared/Company.GestioneDevice.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "Company.GestioneDevice.Application.Contracts": {
+      "path": "src/Company.GestioneDevice.Application.Contracts/Company.GestioneDevice.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Company.GestioneDevice.HttpApi": {
+      "path": "src/Company.GestioneDevice.HttpApi/Company.GestioneDevice.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "Company.GestioneDevice.HttpApi.Client": {
+      "path": "src/Company.GestioneDevice.HttpApi.Client/Company.GestioneDevice.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "Company.GestioneDevice.Web": {
+      "path": "src/Company.GestioneDevice.Web/Company.GestioneDevice.Web.abppkg",
+      "folder": "src"
+    },
+    "Company.GestioneDevice.Web.Tests": {
+      "path": "test/Company.GestioneDevice.Web.Tests/Company.GestioneDevice.Web.Tests.abppkg",
+      "folder": "test"
+    },
+    "Company.GestioneDevice.EntityFrameworkCore.Tests": {
+      "path": "test/Company.GestioneDevice.EntityFrameworkCore.Tests/Company.GestioneDevice.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "Company.GestioneDevice.EntityFrameworkCore": {
+      "path": "src/Company.GestioneDevice.EntityFrameworkCore/Company.GestioneDevice.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "Company.GestioneDevice.TestBase": {
+      "path": "test/Company.GestioneDevice.TestBase/Company.GestioneDevice.TestBase.abppkg",
+      "folder": "test"
+    },
+    "Company.GestioneDevice.Domain.Tests": {
+      "path": "test/Company.GestioneDevice.Domain.Tests/Company.GestioneDevice.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "Company.GestioneDevice.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/Company.GestioneDevice.HttpApi.Client.ConsoleTestApp/Company.GestioneDevice.HttpApi.Client.ConsoleTestApp.abppkg",
+      "folder": "test"
+    },
+    "Company.GestioneDevice.DbMigrator": {
+      "path": "src/Company.GestioneDevice.DbMigrator/Company.GestioneDevice.DbMigrator.abppkg",
+      "folder": "src"
+    },
+    "Company.GestioneDevice.Domain": {
+      "path": "src/Company.GestioneDevice.Domain/Company.GestioneDevice.Domain.abppkg",
+      "folder": "src"
+    }
+  }
+}

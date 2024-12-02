@@ -1,0 +1,13 @@
+﻿{
+  "applications": {
+    "Company.GestioneDevice.Web": {
+      "type": "dotnet-project",
+      "launchUrl": "https://localhost:44357",
+      "path": "../../../src/Company.GestioneDevice.Web/Company.GestioneDevice.Web.csproj",
+      "kubernetesService": ".*-web$",
+      "execution": {
+        "order": 2
+      }
+    }
+  }
+}

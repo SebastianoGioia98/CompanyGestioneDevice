@@ -1,0 +1,42 @@
+{
+  "id": "034784ef-de04-45a3-9b43-a62527a11384",
+  "template": "app",
+  "versions": {
+    "AbpFramework": "9.0.0",
+    "AbpStudio": "0.9.13",
+    "TargetDotnetFramework": "net9.0"
+  },
+  "modules": {
+    "Company.GestioneDevice": {
+      "path": "Company.GestioneDevice.abpmdl"
+    }
+  },
+  "runProfiles": {
+    "Default": {
+      "path": "etc/abp-studio/run-profiles/Default.abprun.json"
+    }
+  },
+  "options": {
+    "httpRequests": {
+      "ignoredUrls": [
+        "^/metrics$"
+      ]
+    }
+  },
+  "creatingStudioConfiguration": {
+    "template": "app",
+    "createdAbpStudioVersion": "0.9.13",
+    "tiered": "false",
+    "multiTenancy": "true",
+    "includeTests": "true",
+    "uiFramework": "mvc",
+    "databaseProvider": "ef",
+    "databaseManagementSystem": "sqlserver",
+    "separateTenantSchema": "false",
+    "theme": "basic",
+    "themeStyle": "",
+    "mobileFramework": "none",
+    "publicWebsite": "false",
+    "socialLogin": ""
+  }
+}
