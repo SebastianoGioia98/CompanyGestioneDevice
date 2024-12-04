@@ -14,6 +14,7 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Company.GestioneDevice.Users;
 
 namespace Company.GestioneDevice.EntityFrameworkCore;
 
@@ -26,7 +27,11 @@ public class GestioneDeviceDbContext :
     IIdentityDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
+    #region Domain Entities
+    public DbSet<User> CompanyUsers { get; set; }
 
+    #endregion
+    
 
     #region Entities from the modules
 
@@ -78,7 +83,7 @@ public class GestioneDeviceDbContext :
         builder.ConfigureOpenIddict();
         builder.ConfigureTenantManagement();
         builder.ConfigureBlobStoring();
-        
+
         /* Configure your own tables/entities inside here */
 
         //builder.Entity<YourEntity>(b =>
@@ -87,5 +92,12 @@ public class GestioneDeviceDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+
+        builder.Entity<User>(b =>
+        {
+            b.ToTable(GestioneDeviceConsts.DbTablePrefix + "Users", GestioneDeviceConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.HasKey(x => x.Id);
+        });
     }
 }
