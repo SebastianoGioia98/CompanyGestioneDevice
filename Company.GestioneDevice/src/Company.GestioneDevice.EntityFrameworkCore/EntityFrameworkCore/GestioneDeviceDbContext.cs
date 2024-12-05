@@ -19,6 +19,8 @@ using Company.GestioneDevice.Devices;
 using Company.GestioneDevice.Devices.SoftwareVersions;
 using Company.GestioneDevice.Devices.DeviceFeatures;
 using Company.GestioneDevice.Devices.Features;
+using Company.GestioneDevice.Users.Policies;
+using Company.GestioneDevice.Users.UserPolicies;
 
 namespace Company.GestioneDevice.EntityFrameworkCore;
 
@@ -105,6 +107,11 @@ public class GestioneDeviceDbContext :
             b.ToTable(GestioneDeviceConsts.DbTablePrefix + "Users", GestioneDeviceConsts.DbSchema);
             b.ConfigureByConvention();
             b.HasKey(x => x.Id);
+
+            b.HasMany(x => x.UserPolicies)
+           .WithOne()
+           .HasForeignKey(x => x.PolicieId)
+           .IsRequired();
         });
 
         builder.Entity<Device>(b =>
@@ -134,8 +141,7 @@ public class GestioneDeviceDbContext :
         {
             b.ToTable(GestioneDeviceConsts.DbTablePrefix + "SoftwareVersions", GestioneDeviceConsts.DbSchema);
 
-            b.HasKey(sv => sv.Id);
-                        
+            b.HasKey(sv => sv.Id);             
         });
 
         builder.Entity<Feature>(b =>
@@ -159,6 +165,31 @@ public class GestioneDeviceDbContext :
             b.HasOne<Feature>()
                   .WithMany()
                   .HasForeignKey(df => df.FeatureId)
+                  .IsRequired();
+        });
+
+
+        builder.Entity<Policie>(b =>
+        {
+            b.ToTable(GestioneDeviceConsts.DbTablePrefix + "Policies", GestioneDeviceConsts.DbSchema);
+            b.HasKey(d => d.Id);
+            b.Property(d => d.Name).IsRequired();
+        });
+
+
+        builder.Entity<UserPolicie>(b =>
+        {
+            b.ToTable(GestioneDeviceConsts.DbTablePrefix + "UserPolicies", GestioneDeviceConsts.DbSchema);
+            b.HasKey(df => new { df.UserId, df.PolicieId });
+
+            b.HasOne<User>()
+                  .WithMany(d => d.UserPolicies)
+                  .HasForeignKey(df => df.UserId)
+                  .IsRequired();
+
+            b.HasOne<Policie>()
+                  .WithMany()
+                  .HasForeignKey(df => df.PolicieId)
                   .IsRequired();
         });
     }

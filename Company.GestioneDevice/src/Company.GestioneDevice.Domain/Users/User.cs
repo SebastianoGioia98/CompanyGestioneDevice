@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Company.GestioneDevice.Users.UserPolicies;
+using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +19,9 @@ public class User : AuditedAggregateRoot<Guid>
     public string? Telephone { get; set; }
 
     //navigation properties
-    //policies TODO
+    public List<UserPolicie> UserPolicies { get; set; } = new List<UserPolicie>();
+
+
 
 
     //Constructors
