@@ -15,6 +15,7 @@ using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Company.GestioneDevice.Users;
+using Company.GestioneDevice.Devices;
 
 namespace Company.GestioneDevice.EntityFrameworkCore;
 
@@ -29,9 +30,10 @@ public class GestioneDeviceDbContext :
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
     #region Domain Entities
     public DbSet<User> CompanyUsers { get; set; }
+    public DbSet<Device> Devices { get; set; }
 
     #endregion
-    
+
 
     #region Entities from the modules
 
@@ -98,6 +100,17 @@ public class GestioneDeviceDbContext :
             b.ToTable(GestioneDeviceConsts.DbTablePrefix + "Users", GestioneDeviceConsts.DbSchema);
             b.ConfigureByConvention();
             b.HasKey(x => x.Id);
+        });
+
+        builder.Entity<Device>(b =>
+        {
+            b.ToTable(GestioneDeviceConsts.DbTablePrefix + "Devices", GestioneDeviceConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.HasKey(x => x.Id);
+
+            b.Property(x => x.Name)
+            .IsRequired()
+            .HasMaxLength(GestioneDeviceSharedConsts.MaxNameLength);
         });
     }
 }
