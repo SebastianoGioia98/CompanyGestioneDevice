@@ -1,4 +1,5 @@
 ﻿using Company.GestioneDevice.Devices.SoftwareVersions;
+using Company.GestioneDevice.Devices.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
+using Company.GestioneDevice.Devices.DeviceFeatures;
 
 namespace Company.GestioneDevice.Devices;
 
@@ -18,8 +20,7 @@ public class Device : AuditedAggregateRoot<Guid>
 
     //Navigation Properties
     public  List<SoftwareVersion> SoftwareVersions { get; set; } = new List<SoftwareVersion>();
-
-    //public List<Features> Features { get; set; }
+    public List<DeviceFeature> DeviceFeatures { get; set; } = new List<DeviceFeature>();
 
     //Guid AssignedUser { get; set; }
 

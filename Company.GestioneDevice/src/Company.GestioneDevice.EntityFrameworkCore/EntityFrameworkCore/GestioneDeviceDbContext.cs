@@ -17,6 +17,8 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Company.GestioneDevice.Users;
 using Company.GestioneDevice.Devices;
 using Company.GestioneDevice.Devices.SoftwareVersions;
+using Company.GestioneDevice.Devices.DeviceFeatures;
+using Company.GestioneDevice.Devices.Features;
 
 namespace Company.GestioneDevice.EntityFrameworkCore;
 
@@ -32,6 +34,8 @@ public class GestioneDeviceDbContext :
     #region Domain Entities
     public DbSet<User> CompanyUsers { get; set; }
     public DbSet<Device> Devices { get; set; }
+    public DbSet<Feature> Features { get; set; }
+    public DbSet<DeviceFeature> DeviceFeatures { get; set; }
 
     #endregion
 
@@ -118,6 +122,12 @@ public class GestioneDeviceDbContext :
             .HasForeignKey(x => x.DeviceId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
+
+
+            b.HasMany(x => x.DeviceFeatures)
+            .WithOne()
+            .HasForeignKey(x => x.DeviceId)
+            .IsRequired();
         });
 
         builder.Entity<SoftwareVersion>(b =>
@@ -126,6 +136,30 @@ public class GestioneDeviceDbContext :
 
             b.HasKey(sv => sv.Id);
                         
+        });
+
+        builder.Entity<Feature>(b =>
+        {
+            b.ToTable(GestioneDeviceConsts.DbTablePrefix + "Features", GestioneDeviceConsts.DbSchema);
+            b.HasKey(d => d.Id);
+            b.Property(d => d.Name).IsRequired();
+        });
+
+
+        builder.Entity<DeviceFeature>(b =>
+        {
+            b.ToTable(GestioneDeviceConsts.DbTablePrefix + "DeviceFeatures", GestioneDeviceConsts.DbSchema);
+            b.HasKey(df => new { df.DeviceId, df.FeatureId });
+
+            b.HasOne<Device>()
+                  .WithMany(d => d.DeviceFeatures)
+                  .HasForeignKey(df => df.DeviceId)
+                  .IsRequired();
+
+            b.HasOne<Feature>()
+                  .WithMany()
+                  .HasForeignKey(df => df.FeatureId)
+                  .IsRequired();
         });
     }
 }
