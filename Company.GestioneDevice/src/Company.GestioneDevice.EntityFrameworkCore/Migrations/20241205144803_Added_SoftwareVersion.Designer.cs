@@ -4,6 +4,7 @@ using Company.GestioneDevice.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Company.GestioneDevice.Migrations
 {
     [DbContext(typeof(GestioneDeviceDbContext))]
-    partial class GestioneDeviceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241205144803_Added_SoftwareVersion")]
+    partial class Added_SoftwareVersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

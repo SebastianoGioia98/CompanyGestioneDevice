@@ -16,6 +16,7 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Company.GestioneDevice.Users;
 using Company.GestioneDevice.Devices;
+using Company.GestioneDevice.Devices.SoftwareVersions;
 
 namespace Company.GestioneDevice.EntityFrameworkCore;
 
@@ -111,6 +112,20 @@ public class GestioneDeviceDbContext :
             b.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(GestioneDeviceSharedConsts.MaxNameLength);
+
+            b.HasMany(x => x.SoftwareVersions)
+            .WithOne()
+            .HasForeignKey(x => x.DeviceId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<SoftwareVersion>(b =>
+        {
+            b.ToTable(GestioneDeviceConsts.DbTablePrefix + "SoftwareVersions", GestioneDeviceConsts.DbSchema);
+
+            b.HasKey(sv => sv.Id);
+                        
         });
     }
 }

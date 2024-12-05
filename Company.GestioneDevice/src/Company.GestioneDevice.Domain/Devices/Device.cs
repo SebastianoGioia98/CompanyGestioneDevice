@@ -15,10 +15,9 @@ public class Device : AuditedAggregateRoot<Guid>
 	public DeviceType Type { get; set; }
     public string Model { get; set; }
 
-    public string SoftwareVersions  { get; set; }
 
     //Navigation Properties
-    //public  List<SoftwareVersion> SoftwareVersions { get; set; } = new List<SoftwareVersion>();
+    public  List<SoftwareVersion> SoftwareVersions { get; set; } = new List<SoftwareVersion>();
 
     //public List<Features> Features { get; set; }
 
@@ -54,12 +53,12 @@ public class Device : AuditedAggregateRoot<Guid>
 
     }
 
-    public Device(Guid id, string name, DeviceType type, string model, string softwareVersion) : base(id)
+    public Device(Guid id, string name, DeviceType type, string model, SoftwareVersion softwareVersion) : base(id)
     {
         SetName(name);
         Type = type;
         Model = model;
-        SoftwareVersion = softwareVersion;
+        SoftwareVersions.Add(softwareVersion);
     }
 
 
