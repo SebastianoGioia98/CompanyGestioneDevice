@@ -22,7 +22,7 @@ public class Device : AuditedAggregateRoot<Guid>
     public  List<SoftwareVersion> SoftwareVersions { get; set; } = new List<SoftwareVersion>();
     public List<DeviceFeature> DeviceFeatures { get; set; } = new List<DeviceFeature>();
 
-    //Guid AssignedUser { get; set; }
+    public Guid UserId { get; set; }
 
 
 

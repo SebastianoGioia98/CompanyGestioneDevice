@@ -36,8 +36,12 @@ public class GestioneDeviceDbContext :
     #region Domain Entities
     public DbSet<User> CompanyUsers { get; set; }
     public DbSet<Device> Devices { get; set; }
+
     public DbSet<Feature> Features { get; set; }
     public DbSet<DeviceFeature> DeviceFeatures { get; set; }
+
+    public DbSet<Policie> Policies { get; set; }
+    public DbSet<UserPolicie> UserPolicies { get; set; }
 
     #endregion
 
@@ -112,6 +116,7 @@ public class GestioneDeviceDbContext :
            .WithOne()
            .HasForeignKey(x => x.PolicieId)
            .IsRequired();
+
         });
 
         builder.Entity<Device>(b =>
@@ -130,10 +135,14 @@ public class GestioneDeviceDbContext :
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-
             b.HasMany(x => x.DeviceFeatures)
             .WithOne()
             .HasForeignKey(x => x.DeviceId)
+            .IsRequired();
+
+            b.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
             .IsRequired();
         });
 
