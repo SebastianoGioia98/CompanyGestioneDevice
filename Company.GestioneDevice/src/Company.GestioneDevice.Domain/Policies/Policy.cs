@@ -5,15 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Entities.Auditing;
 
-namespace Company.GestioneDevice.Users.Policies;
+namespace Company.GestioneDevice.Policies;
 
-public class Policie : AuditedEntity<Guid>
+public class Policy : AuditedAggregateRoot<Guid>
 {
     public string Name { get; set; }
 
     //constructor
-    Policie() { }
-    Policie(Guid id, string name):base(id)
+    Policy() { }
+    Policy(Guid id, string name) : base(id)
     {
         Name = name;
     }

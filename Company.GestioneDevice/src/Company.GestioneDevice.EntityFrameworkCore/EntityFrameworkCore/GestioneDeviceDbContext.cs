@@ -19,7 +19,7 @@ using Company.GestioneDevice.Devices;
 using Company.GestioneDevice.Devices.SoftwareVersions;
 using Company.GestioneDevice.Devices.DeviceFeatures;
 using Company.GestioneDevice.Devices.Features;
-using Company.GestioneDevice.Users.Policies;
+using Company.GestioneDevice.Policies;
 using Company.GestioneDevice.Users.UserPolicies;
 
 namespace Company.GestioneDevice.EntityFrameworkCore;
@@ -40,8 +40,8 @@ public class GestioneDeviceDbContext :
     public DbSet<Feature> Features { get; set; }
     public DbSet<DeviceFeature> DeviceFeatures { get; set; }
 
-    public DbSet<Policie> Policies { get; set; }
-    public DbSet<UserPolicie> UserPolicies { get; set; }
+    public DbSet<Policy> Policies { get; set; }
+    public DbSet<UserPolicy> UserPolicies { get; set; }
 
     #endregion
 
@@ -178,7 +178,7 @@ public class GestioneDeviceDbContext :
         });
 
 
-        builder.Entity<Policie>(b =>
+        builder.Entity<Policy>(b =>
         {
             b.ToTable(GestioneDeviceConsts.DbTablePrefix + "Policies", GestioneDeviceConsts.DbSchema);
             b.HasKey(d => d.Id);
@@ -186,7 +186,7 @@ public class GestioneDeviceDbContext :
         });
 
 
-        builder.Entity<UserPolicie>(b =>
+        builder.Entity<UserPolicy>(b =>
         {
             b.ToTable(GestioneDeviceConsts.DbTablePrefix + "UserPolicies", GestioneDeviceConsts.DbSchema);
             b.HasKey(df => new { df.UserId, df.PolicieId });
@@ -196,7 +196,7 @@ public class GestioneDeviceDbContext :
                   .HasForeignKey(df => df.UserId)
                   .IsRequired();
 
-            b.HasOne<Policie>()
+            b.HasOne<Policy>()
                   .WithMany()
                   .HasForeignKey(df => df.PolicieId)
                   .IsRequired();

@@ -19,7 +19,7 @@ public class User : AuditedAggregateRoot<Guid>
     public string? Telephone { get; set; }
 
     //navigation properties
-    public List<UserPolicie> UserPolicies { get; set; } = new List<UserPolicie>();
+    public List<UserPolicy> UserPolicies { get; set; } = new List<UserPolicy>();
 
 
 
