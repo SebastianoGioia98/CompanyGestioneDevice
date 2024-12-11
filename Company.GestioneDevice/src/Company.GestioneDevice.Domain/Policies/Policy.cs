@@ -12,8 +12,8 @@ public class Policy : AuditedAggregateRoot<Guid>
     public string Name { get; set; }
 
     //constructor
-    Policy() { }
-    Policy(Guid id, string name) : base(id)
+    public Policy() { }
+    public Policy(Guid id, string name) : base(id)
     {
         Name = name;
     }
