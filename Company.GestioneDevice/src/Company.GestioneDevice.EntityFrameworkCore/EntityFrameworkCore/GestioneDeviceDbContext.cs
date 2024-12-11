@@ -114,7 +114,7 @@ public class GestioneDeviceDbContext :
 
             b.HasMany(x => x.UserPolicies)
            .WithOne()
-           .HasForeignKey(x => x.PolicieId)
+           .HasForeignKey(x => x.PolicyId)
            .IsRequired();
 
         });
@@ -189,7 +189,7 @@ public class GestioneDeviceDbContext :
         builder.Entity<UserPolicy>(b =>
         {
             b.ToTable(GestioneDeviceConsts.DbTablePrefix + "UserPolicies", GestioneDeviceConsts.DbSchema);
-            b.HasKey(df => new { df.UserId, df.PolicieId });
+            b.HasKey(df => new { df.UserId, df.PolicyId });
 
             b.HasOne<User>()
                   .WithMany(d => d.UserPolicies)
@@ -198,7 +198,7 @@ public class GestioneDeviceDbContext :
 
             b.HasOne<Policy>()
                   .WithMany()
-                  .HasForeignKey(df => df.PolicieId)
+                  .HasForeignKey(df => df.PolicyId)
                   .IsRequired();
         });
     }

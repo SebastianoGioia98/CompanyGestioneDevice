@@ -13,15 +13,15 @@ namespace Company.GestioneDevice.Users;
 
 public class UserDataSeeder: ITransientDependency
 {
-    private readonly IRepository<User, Guid> _userRepository;
-    private readonly IGuidGenerator _GuidGenerator;
+    private readonly IUserRepository _userRepository;
+    private readonly IGuidGenerator _guidGenerator;
 
 
     //Constructor
-    public UserDataSeeder(IRepository<User, Guid> userRepository, IGuidGenerator guidGenerator)
+    public UserDataSeeder(IUserRepository userRepository, IGuidGenerator guidGenerator)
     {
         _userRepository = userRepository;
-        _GuidGenerator = guidGenerator;
+        _guidGenerator = guidGenerator;
     }
 
 
@@ -32,25 +32,27 @@ public class UserDataSeeder: ITransientDependency
         {
             await _userRepository.InsertAsync(
                 new User
-                {
-                    Username = "userMB",
-                    Name = "Marco",
-                    Surname = "Bianchi",
-                    Email = "marcobianchi@company.com",
-                    Telephone = "0102855664"
-                },
+               (
+                    _guidGenerator.Create(),
+                    "userMB",
+                     "Marco",
+                     "Bianchi",
+                     "marcobianchi@company.com",
+                    "0102855664"
+                ),
                 autoSave: true
             );
 
             await _userRepository.InsertAsync(
                 new User
-                {
-                    Username = "userMR",
-                    Name = "Marco",
-                    Surname = "Rossi",
-                    Email = "marcorossi@company.com",
-                    Telephone = "0102855934"
-                },
+                (
+                    _guidGenerator.Create(),
+                    "userMR",
+                    "Marco",
+                    "Rossi",
+                    "marcorossi@company.com",
+                    "0102855934"
+                ),
                 autoSave: true
             );
         }
