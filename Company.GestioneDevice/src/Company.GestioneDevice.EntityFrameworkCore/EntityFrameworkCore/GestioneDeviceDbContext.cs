@@ -18,9 +18,9 @@ using Company.GestioneDevice.Users;
 using Company.GestioneDevice.Devices;
 using Company.GestioneDevice.Devices.SoftwareVersions;
 using Company.GestioneDevice.Devices.DeviceFeatures;
-using Company.GestioneDevice.Devices.Features;
 using Company.GestioneDevice.Policies;
 using Company.GestioneDevice.Users.UserPolicies;
+using Company.GestioneDevice.Features;
 
 namespace Company.GestioneDevice.EntityFrameworkCore;
 

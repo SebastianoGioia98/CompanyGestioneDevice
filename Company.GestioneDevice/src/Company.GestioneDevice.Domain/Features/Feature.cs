@@ -5,16 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Entities.Auditing;
 
-namespace Company.GestioneDevice.Devices.Features;
+namespace Company.GestioneDevice.Features;
 
-public class Feature : AuditedEntity<Guid>
+public class Feature : AuditedAggregateRoot<Guid>
 {
     public string Name { get; set; }
 
     //constructor
     public Feature() { }
 
-    public Feature(Guid id, string name):base(id)
+    public Feature(Guid id, string name) : base(id)
     {
         this.Name = name;
     }

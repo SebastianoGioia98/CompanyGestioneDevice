@@ -1,5 +1,4 @@
 ﻿using Company.GestioneDevice.Devices.SoftwareVersions;
-using Company.GestioneDevice.Devices.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;

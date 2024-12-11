@@ -1,4 +1,5 @@
-﻿using Company.GestioneDevice.Policies;
+﻿using Company.GestioneDevice.Features;
+using Company.GestioneDevice.Policies;
 using Company.GestioneDevice.Users;
 using System;
 using System.Collections.Generic;
@@ -15,21 +16,24 @@ public class SolutionDataSeederContributor : IDataSeedContributor, ITransientDep
 
     protected readonly UserDataSeeder _userDataSeeder;
     protected readonly PolicyDataSeeder _policyDataSeeder;
+    protected readonly FeatureDataSeeder _featureDataSeeder;
 
     public SolutionDataSeederContributor(
         UserDataSeeder userDataSeeder,
-        PolicyDataSeeder policyDataSeeder
+        PolicyDataSeeder policyDataSeeder,
+        FeatureDataSeeder featureDataSeeder
         )
     {
         _userDataSeeder = userDataSeeder;
         _policyDataSeeder = policyDataSeeder;
+        _featureDataSeeder = featureDataSeeder;
     }
     public async Task SeedAsync(DataSeedContext context)
     {
 #if DEBUG
         await _userDataSeeder.SeedAsync(context); 
         await _policyDataSeeder.SeedAsync(context);
-      
+        await _featureDataSeeder.SeedAsync(context);
 #endif
     }
 }
