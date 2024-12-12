@@ -8,31 +8,31 @@ using Volo.Abp.Application.Dtos;
 
 namespace Company.GestioneDevice.Users;
 
-public class UserDto : EntityDto
+public class UserDto
 {
-    [Required]
-    [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
+    ////  [Required]
+    //[StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
     public string Username { get; set; }
 
-    [Required]
-    [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
-    public string Name { get; set; }
+    ////  [Required]
+    //[StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
+    //public string Name { get; set; }
 
-    [Required]
-    [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
-    public string Surname { get; set; }
+    ////  [Required]
+    //[StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
+    //public string Surname { get; set; }
 
-    [Required]
-    [EmailAddress]
-    [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
-    public string Email { get; set; }
+    //// [Required]
+    //[EmailAddress]
+    //[StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
+    //public string Email { get; set; }
 
 
-    [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
-    public string? Telephone { get; set; }
+    //[StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
+    //public string? Telephone { get; set; }
 
-    [Required]
-    public List<Guid> PolicyIds { get; set; } = new List<Guid>();
+    // [Required]
+    //public List<Guid> PolicyIds { get; set; } = new List<Guid>();
 
 
 }

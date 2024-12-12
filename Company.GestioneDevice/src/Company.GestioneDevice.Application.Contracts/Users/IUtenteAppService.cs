@@ -9,7 +9,7 @@ using static Volo.Abp.Identity.Settings.IdentitySettingNames;
 
 namespace Company.GestioneDevice.Users;
 
-public interface IUserAppService: ICrudAppService <
+public interface IUtenteAppService: ICrudAppService <
     UserDto,
     Guid,
     PagedAndSortedResultRequestDto
