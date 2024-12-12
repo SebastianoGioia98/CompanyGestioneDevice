@@ -8,7 +8,7 @@ using Volo.Abp.Domain.Repositories;
 namespace Company.GestioneDevice.Devices;
 
 
-public interface IDevicesRepository : IRepository<Device, Guid>
+public interface IDeviceRepository : IRepository<Device, Guid>
 {
 
    
