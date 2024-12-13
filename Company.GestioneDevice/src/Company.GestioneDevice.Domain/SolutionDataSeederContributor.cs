@@ -16,24 +16,22 @@ public class SolutionDataSeederContributor : IDataSeedContributor, ITransientDep
 
     protected readonly UserDataSeeder _userDataSeeder;
     protected readonly PolicyDataSeeder _policyDataSeeder;
-    protected readonly FeatureDataSeeder _featureDataSeeder;
+
 
     public SolutionDataSeederContributor(
         UserDataSeeder userDataSeeder,
-        PolicyDataSeeder policyDataSeeder,
-        FeatureDataSeeder featureDataSeeder
+        PolicyDataSeeder policyDataSeeder
         )
     {
         _userDataSeeder = userDataSeeder;
         _policyDataSeeder = policyDataSeeder;
-        _featureDataSeeder = featureDataSeeder;
+
     }
     public async Task SeedAsync(DataSeedContext context)
     {
 #if DEBUG
         await _userDataSeeder.SeedAsync(context); 
         await _policyDataSeeder.SeedAsync(context);
-        await _featureDataSeeder.SeedAsync(context);
 #endif
     }
 }

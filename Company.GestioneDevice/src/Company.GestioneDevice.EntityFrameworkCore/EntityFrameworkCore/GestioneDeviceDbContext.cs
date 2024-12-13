@@ -158,6 +158,8 @@ public class GestioneDeviceDbContext :
             b.ToTable(GestioneDeviceConsts.DbTablePrefix + "Features", GestioneDeviceConsts.DbSchema);
             b.HasKey(d => d.Id);
             b.Property(d => d.Name).IsRequired();
+
+            b.HasOne<Policy>().WithMany().HasForeignKey(x => x.PolicyId).IsRequired();
         });
 
 
