@@ -1,6 +1,7 @@
 ﻿using Company.GestioneDevice.Policies;
 using JetBrains.Annotations;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,6 +42,7 @@ public class UserManager: DomainService
         [CanBeNull] List<Guid> policyIds
     )
     {
+
         user.SetUsername(username);
         user.Name=name;
         user.Surname = surname;
@@ -56,30 +58,59 @@ public class UserManager: DomainService
 
 
     // ------ POLICY Methods
-    public async Task SetPoliciesAsync(User user, [CanBeNull] List<Guid> policyIds)
+
+    public async Task<List<Policy>> GetUserPoliciesAsync(User user)
+    {
+        if (!user.UserPolicies.Any())
+        {
+            return [];
+        }
+
+        List<Policy> res = new List<Policy>();
+        foreach (var UserPolicies in user.UserPolicies)
+        {
+            res.Add(await _policyRepository.GetAsync(UserPolicies.PolicyId));
+        }
+        return res;
+    }
+
+    public async Task<List<Policy>> SetPoliciesAsync(User user, [CanBeNull] List<Guid> policyIds)
     {
         if (policyIds == null || !policyIds.Any())
         {
             user.RemoveAllPolicies();
-            return;
+            return [];
         }
 
-        var query = (await _policyRepository.GetQueryableAsync())
-            .Where(x => policyIds.Contains(x.Id))
-            .Select(x => x.Id)
-            .Distinct();
+        //var query = (await _policyRepository.GetQueryableAsync())
+        //    .Where(x => policyIds.Contains(x.Id))
+        //    .Select(x => x.Id)
+        //    .Distinct();
 
-        var filteredpolicyIds = await AsyncExecuter.ToListAsync(query);
-        if (!filteredpolicyIds.Any())
+        //var filteredPolicyIds = await AsyncExecuter.ToListAsync(query);
+
+
+        var filteredPolicies = (await _policyRepository.GetQueryableAsync())
+          .Where(x => policyIds.Contains(x.Id))
+          .Select(x => new Policy(x.Id, x.Name))
+          .Distinct()
+          .ToList();
+
+        var filteredPolicyIds = filteredPolicies.Select(x => x.Id).ToList();
+
+        if (!filteredPolicyIds.Any())
         {
-            return;
+            return [];
         }
 
-        user.RemoveAllPoliciesExceptGivenIds(filteredpolicyIds);
+        user.RemoveAllPoliciesExceptGivenIds(filteredPolicyIds);
 
-        foreach (var policyId in filteredpolicyIds)
+        foreach (var policyId in filteredPolicyIds)
         {
             user.AssignPolicy(policyId);
         }
+
+        return filteredPolicies;
+
     }
 }

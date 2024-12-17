@@ -1,19 +1,16 @@
-﻿using Company.GestioneDevice.Policies;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Volo.Abp.Application.Dtos;
 
 namespace Company.GestioneDevice.Users;
 
-public class UserDto
+public class UpdateUserDto
 {
-
+    [Required]
     public Guid Id { get; set; }
-
 
     [Required]
     [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
@@ -37,7 +34,5 @@ public class UserDto
     public string? Telephone { get; set; }
 
     [Required]
-    public List<PolicyDto> Policies { get; set; } = new List<PolicyDto>();
-
-
+    public List<Guid> PolicyIds { get; set; } = new List<Guid>();
 }

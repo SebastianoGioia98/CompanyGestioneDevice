@@ -15,5 +15,5 @@ public interface IUtenteAppService: ICrudAppService <
     PagedAndSortedResultRequestDto
     >
 { 
-    public Task<UserDto> CreateUserWithPolicies(UserDto input);
+    public Task<UserDto> CreateUserWithPolicies(CreateUserDto input);
 }
