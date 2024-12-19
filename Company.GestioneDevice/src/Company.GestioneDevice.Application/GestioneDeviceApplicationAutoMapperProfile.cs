@@ -1,4 +1,8 @@
 using AutoMapper;
+using Company.GestioneDevice.Devices;
+using Company.GestioneDevice.Devices.DeviceFeatures;
+using Company.GestioneDevice.Devices.SoftwareVersions;
+using Company.GestioneDevice.Features;
 using Company.GestioneDevice.Policies;
 using Company.GestioneDevice.Users;
 
@@ -17,16 +21,45 @@ public class GestioneDeviceApplicationAutoMapperProfile : Profile
             .ReverseMap()
             .ForMember(dest => dest.UserPolicies, opt => opt.Ignore());
 
-
         CreateMap<User, CreateUserDto>()
             .ForMember(dest => dest.PolicyIds, opt => opt.Ignore())
             .ReverseMap()
             .ForMember(dest => dest.UserPolicies, opt => opt.Ignore());
 
+        CreateMap<User, UserLookupDto>()
+            .ReverseMap();
+
+
 
         CreateMap<Policy, PolicyDto>()
             .ReverseMap();
 
+
+
+        CreateMap<Device, DeviceDto>()
+            .ReverseMap();
+
+        CreateMap<Device, DeviceDetailedDto>()
+            .ReverseMap();
+
+        CreateMap<Device, CreateDeviceDto>()
+           .ForMember(dest => dest.DeviceFeaturesIds, opt => opt.Ignore())
+           .ReverseMap()
+           .ForMember(dest => dest.DeviceFeatures, opt => opt.Ignore());
+
+
+
+        CreateMap<Feature, FeatureDto>()
+           .ReverseMap();
+
+
+
+
+        CreateMap<SoftwareVersion, SoftwareVersionDto>()
+           .ReverseMap();
+
+        CreateMap<SoftwareVersion, SoftwareVersionLookupDto>()
+         .ReverseMap();
 
     }
 }

@@ -16,4 +16,6 @@ public interface IUserRepository : IRepository<User, Guid>
     // public Task<List<User>> GetUsers(Guid projectId);
 
     public Task<User?> GetWithDetails(Guid id);
+
+    public Task<IQueryable<User>> CompleteJoin();
 }

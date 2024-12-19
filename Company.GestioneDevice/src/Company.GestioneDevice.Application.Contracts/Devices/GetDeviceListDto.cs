@@ -5,11 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 
-namespace Company.GestioneDevice.Features;
+namespace Company.GestioneDevice.Devices;
 
-public class FeatureDto : EntityDto
+public class GetDeviceListDto : PagedAndSortedResultRequestDto
 {
-    public string Name { get; set; }
-
-    public bool State { get; set; }
+    public string? Filter { get; set; }
 }

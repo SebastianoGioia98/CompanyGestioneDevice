@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Company.GestioneDevice.Devices.SoftwareVersions;
 
-public class SoftwareVersionDto
+public class UpdateDeviceSoftwareVersionDto
 {
-    public string Name { get; set; }
-    public string Version { get; set; }
-    public DateTime CreationTime { get; set; }
+     public Guid DeviceId {  get; set; }
+
+    public SoftwareVersionLookupDto NewSoftwareVersion { get; set; } 
+
+
 }

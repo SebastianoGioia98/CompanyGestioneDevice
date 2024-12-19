@@ -139,6 +139,7 @@ public class GestioneDeviceDbContext :
             .WithOne()
             .HasForeignKey(x => x.DeviceId)
             .IsRequired();
+            //.OnDelete(DeleteBehavior.Cascade);
 
             b.HasOne<User>()
             .WithMany()

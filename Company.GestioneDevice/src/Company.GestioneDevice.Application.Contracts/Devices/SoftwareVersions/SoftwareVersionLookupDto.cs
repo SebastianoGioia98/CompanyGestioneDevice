@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Company.GestioneDevice.Devices.SoftwareVersions;
 
-public class SoftwareVersionDto
+public class SoftwareVersionLookupDto
 {
     public string Name { get; set; }
     public string Version { get; set; }
-    public DateTime CreationTime { get; set; }
+
 }

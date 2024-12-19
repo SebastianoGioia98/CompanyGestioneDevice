@@ -5,12 +5,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Volo.Abp.Application.Dtos;
 
 namespace Company.GestioneDevice.Devices;
 
-public class CreateDeviceDto: EntityDto
+public class UpdateDeviceDto
 {
+    [Required]
+    public Guid Id { get; set; }
+
     [Required]
     [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
     public string Name { get; set; }
@@ -22,10 +24,6 @@ public class CreateDeviceDto: EntityDto
     [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
     public string Model { get; set; }
 
-    public Guid UserId { get; set; }
-
-    [Required]
-    public SoftwareVersionLookupDto FirstSoftwareVersion { get; set; }
 
     [Required]
     public List<Guid> DeviceFeaturesIds { get; set; } = new List<Guid>();

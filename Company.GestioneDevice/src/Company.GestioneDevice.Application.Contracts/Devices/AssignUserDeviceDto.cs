@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Volo.Abp.Domain.Repositories;
 
 namespace Company.GestioneDevice.Devices;
 
-
-public interface IDeviceRepository : IRepository<Device, Guid>
+public class AssignUserDeviceDto
 {
-    public Task<IQueryable<Device>> CompleteJoin();
+    public Guid DeviceId { get; set; }
 
-
+    public Guid UserId { get; set; }
 }

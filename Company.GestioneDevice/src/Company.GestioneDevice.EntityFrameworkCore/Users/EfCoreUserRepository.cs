@@ -1,4 +1,5 @@
-﻿using Company.GestioneDevice.EntityFrameworkCore;
+﻿using Company.GestioneDevice.Devices;
+using Company.GestioneDevice.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,15 @@ public class EfCoreUserRepository : EfCoreRepository<GestioneDeviceDbContext, Us
             .Include(u => u.UserPolicies)
             .FirstOrDefaultAsync(u => u.Id == id);
 
+    }
+
+
+    public async Task<IQueryable<User>> CompleteJoin()
+    {
+        var queryable = await GetQueryableAsync();
+        return queryable
+            .Include(u => u.UserPolicies)
+            .AsQueryable();
     }
 
 

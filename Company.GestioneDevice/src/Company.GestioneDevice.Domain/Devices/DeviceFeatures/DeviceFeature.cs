@@ -19,4 +19,10 @@ public class DeviceFeature: AuditedEntity<Guid>
         DeviceId = deviceId;
         FeatureId = featureId;
     }
+
+    public DeviceFeature( Guid deviceId, Guid featureId)
+    {
+        DeviceId = deviceId;
+        FeatureId = featureId;
+    }
 }

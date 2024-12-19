@@ -7,29 +7,20 @@ using System.Threading.Tasks;
 using Company.GestioneDevice.Devices;
 using Company.GestioneDevice.Devices.SoftwareVersions;
 using Company.GestioneDevice.Features;
+using Company.GestioneDevice.Users;
 
 namespace Company.GestioneDevice.Devices;
 
 public class DeviceDto
 {
-    [Required]
-    [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
+    public Guid Id { get; set; }
     public string Name { get; set; }
 
-    [Required]
     public DeviceType Type { get; set; }
 
-    [Required]
-    [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
     public string Model { get; set; }
 
-    public Guid UserId { get; set; }
+    public UserLookupDto User { get; set; }
 
-    [Required]
-    public SoftwareVersionDto LastSoftwareVersion { get; set; }
-
-    [Required]
-    public List<FeatureDto> DeviceFeatures { get; set; } = new List<FeatureDto>();
-
-   
+    public DateTime CreationTime { get; set; }
 }
