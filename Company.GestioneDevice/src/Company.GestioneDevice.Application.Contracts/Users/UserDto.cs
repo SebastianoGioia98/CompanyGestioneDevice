@@ -33,11 +33,11 @@ public class UserDto
     public string Email { get; set; }
 
 
+
     [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
     public string? Telephone { get; set; }
 
-    [Required]
-    public List<PolicyDto> Policies { get; set; } = new List<PolicyDto>();
+
 
 
 }

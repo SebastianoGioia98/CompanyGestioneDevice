@@ -84,7 +84,10 @@ public class User : AuditedAggregateRoot<Guid>
 
     public void RemoveAllPolicies()
     {
-        UserPolicies.RemoveAll(x => x.UserId == this.Id);
+        foreach (var userPolicy in UserPolicies.ToList()) // ToList evita modifiche mentre iteri
+        {
+            UserPolicies.Remove(userPolicy); // Rimuovi dalla lista
+        }
     }
 
     private bool IsInPolicies(Guid policyId)

@@ -17,9 +17,10 @@ public class GestioneDeviceApplicationAutoMapperProfile : Profile
          * into multiple profile classes for a better organization. */
 
         CreateMap<User, UserDto>()
-            .ForMember(dest => dest.Policies, opt => opt.Ignore())
-            .ReverseMap()
-            .ForMember(dest => dest.UserPolicies, opt => opt.Ignore());
+            .ReverseMap();
+
+        CreateMap<User, UserDetailedDto>()
+           .ReverseMap();
 
         CreateMap<User, CreateUserDto>()
             .ForMember(dest => dest.PolicyIds, opt => opt.Ignore())

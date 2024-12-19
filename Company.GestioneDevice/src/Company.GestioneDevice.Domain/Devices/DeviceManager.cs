@@ -28,7 +28,7 @@ public class DeviceManager : DomainService
 
 
     // ------ DEVICE Methods
-    public async Task<(Device device, List<Feature> deviceFeatures)> UpdateAsync(
+    public async Task<List<Feature>> UpdateAsync(
     Device device,
     string name,
     DeviceType type,
@@ -44,7 +44,7 @@ public class DeviceManager : DomainService
 
         List<Feature> deviceFeatures = await this.SetFeaturesAsync(device, featureIds);
 
-        return (device, deviceFeatures);
+        return deviceFeatures;
     }
 
 

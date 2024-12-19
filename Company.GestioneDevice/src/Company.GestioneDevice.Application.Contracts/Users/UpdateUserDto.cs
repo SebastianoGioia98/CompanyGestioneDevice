@@ -33,6 +33,4 @@ public class UpdateUserDto
     [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
     public string? Telephone { get; set; }
 
-    [Required]
-    public List<Guid> PolicyIds { get; set; } = new List<Guid>();
 }

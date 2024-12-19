@@ -1,4 +1,5 @@
-﻿using Company.GestioneDevice.Policies;
+﻿using Company.GestioneDevice.Features;
+using Company.GestioneDevice.Policies;
 using JetBrains.Annotations;
 using System;
 using System.Collections;
@@ -13,14 +14,22 @@ namespace Company.GestioneDevice.Users;
 
 public class UserManager: DomainService
 {
+
+    //dependency injection
     private readonly IUserRepository _userRepository;
     private readonly IPolicyRepository _policyRepository;
 
+
+    //constructor
     public UserManager(IUserRepository userRepository, IPolicyRepository policyRepository)
     {
         _userRepository = userRepository;
         _policyRepository = policyRepository;
     }
+
+
+
+
 
     // ------ USER Methods
     public async Task<User> CreateAsync(Guid id, string username, string name, string surname, string email, string? telephone, [CanBeNull] List<Guid> policyIds)
@@ -32,25 +41,13 @@ public class UserManager: DomainService
         return user;
     }
 
-    public async Task<User> UpdateAsync(
-        User user,
-        string username,
-        string name,
-        string surname,
-        string email,
-        string? telephone,
-        [CanBeNull] List<Guid> policyIds
-    )
+    public async Task<User> UpdateAsync(User user, string username, string name, string surname, string email, string? telephone)
     {
-
         user.SetUsername(username);
         user.Name=name;
         user.Surname = surname;
         user.Email = email;
         user.Telephone = telephone;
-
-
-        await this.SetPoliciesAsync(user, policyIds);
 
         return user;
     }
@@ -58,6 +55,16 @@ public class UserManager: DomainService
 
 
     // ------ POLICY Methods
+
+    public async Task<IQueryable<Policy>> GetQueryablePolicy()
+    {
+        return await _policyRepository.GetQueryableAsync();
+    }
+
+
+
+
+
 
     public async Task<List<Policy>> GetUserPoliciesAsync(User user)
     {
@@ -81,14 +88,6 @@ public class UserManager: DomainService
             user.RemoveAllPolicies();
             return [];
         }
-
-        //var query = (await _policyRepository.GetQueryableAsync())
-        //    .Where(x => policyIds.Contains(x.Id))
-        //    .Select(x => x.Id)
-        //    .Distinct();
-
-        //var filteredPolicyIds = await AsyncExecuter.ToListAsync(query);
-
 
         var filteredPolicies = (await _policyRepository.GetQueryableAsync())
           .Where(x => policyIds.Contains(x.Id))

@@ -1,4 +1,5 @@
-﻿using Company.GestioneDevice.Policies;
+﻿using Company.GestioneDevice.Devices;
+using Company.GestioneDevice.Policies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Guids;
 using Volo.Abp.ObjectMapping;
@@ -33,13 +35,13 @@ public class UtenteAppService : CrudAppService<
     //dependency injection
     private readonly IGuidGenerator _guidGenerator;
     private readonly UserManager _userManager;
-    private readonly IUserRepository _userRepository;
+    private readonly IUserRepository _repository;
 
     //constructor
     public UtenteAppService(IUserRepository repository, IGuidGenerator guidGenerator, UserManager userManager) : base(repository)
     {
         _guidGenerator = guidGenerator;
-        _userRepository = repository;
+        _repository = repository;
         _userManager = userManager;
     }
 
@@ -47,8 +49,7 @@ public class UtenteAppService : CrudAppService<
     //Methods
     [AllowAnonymous]
     [HttpPost]
-    [DisableValidation]
-    public async Task<UserDto> CreateUserWithPolicies([FromBody]CreateUserDto input)
+    public async Task<UserDetailedDto> CreateUserWithDetails([FromBody]CreateUserDto input)
     {
         //create User
         var user = await _userManager.CreateAsync(
@@ -62,41 +63,56 @@ public class UtenteAppService : CrudAppService<
             );
 
         //set policies
-        List<Policy> settedPolicies = new List<Policy>();
-        if (input.PolicyIds != null && input.PolicyIds.Count() > 0)
-        {
-           settedPolicies = await _userManager.SetPoliciesAsync(user, input.PolicyIds);
-        }
+        List<Policy> settedPolicies = await _userManager.SetPoliciesAsync(user, input.PolicyIds);
+        
 
         //save
-        await Repository.InsertAsync(user);
+        await _repository.InsertAsync(user);
 
         //return confirm DTO
-        var res = ObjectMapper.Map< User, UserDto>(user);
+        var res = ObjectMapper.Map< User, UserDetailedDto>(user);
         res.Policies = ObjectMapper.Map<List<Policy>, List<PolicyDto>>(settedPolicies);
         return res;
     }
 
 
     [HttpGet("api/app/utente/user-by-id/{id}")]
-    public async Task<ActionResult<UserDto>> getUserById(Guid id)
+    public async Task<ActionResult<UserDetailedDto>> getUserById(Guid id)
     {
         try
-        {   
-            //find user
-            var user = await _userRepository.GetWithDetails(id);
+        {
 
-            if (user == null)
+            //Get the IQueryable<User> from the repository
+            var queryable = await _repository.CompleteJoin();
+
+
+            //Prepare a query to join user and policy
+            var policyQueryable = await _userManager.GetQueryablePolicy();
+
+            var query = from user in queryable
+                        where user.Id == id
+                        select new
+                        {
+                            User = user,
+                            Policies = user.UserPolicies
+                                        .Join(policyQueryable,
+                                              up => up.PolicyId,
+                                              p => p.Id,
+                                              (df, f) => f)
+                                        .ToList()
+                        };
+
+            //Execute the query and check
+            var queryResult = await AsyncExecuter.FirstOrDefaultAsync(query);
+            if (queryResult == null)
             {
-                return new NotFoundResult();
+                throw new EntityNotFoundException(typeof(User), id);
             }
 
-            //find UserPolicy
-            var userPolicies = await _userManager.GetUserPoliciesAsync(user);
 
-            //return confirm DTO
-            var res = ObjectMapper.Map<User, UserDto>(user);
-            res.Policies = ObjectMapper.Map<List<Policy>, List<PolicyDto>>(userPolicies);
+            //   --- prepare Dto ---
+            var res = ObjectMapper.Map<User, UserDetailedDto>(queryResult.User);
+            res.Policies = ObjectMapper.Map<List<Policy>, List<PolicyDto>>(queryResult.Policies);
             return new OkObjectResult(res);
         }
         catch (Exception ex)
@@ -108,16 +124,24 @@ public class UtenteAppService : CrudAppService<
 
     [AllowAnonymous]
     [HttpPut]
-    [DisableValidation]
-    public async Task<ActionResult<UserDto>> UpdateUserWithPolicies([FromBody]UpdateUserDto input)
+    public async Task<ActionResult<UserDto>> UpdateUserWithDetails([FromBody] UpdateUserDto input)
     {
-        //find user
-        var user = await _userRepository.GetWithDetails(input.Id);
+        //Get the IQueryable<Device> from the repository
+        var queryable = await _repository.CompleteJoin();
 
+        //find device
+        var query = from u in queryable
+                    where u.Id == input.Id
+                    select u;
+
+        var user = await AsyncExecuter.FirstOrDefaultAsync(query);
+
+        //check device null
         if (user == null)
         {
             return new NotFoundResult();
         }
+
 
         //updateUser
         user = await _userManager.UpdateAsync(
@@ -126,8 +150,7 @@ public class UtenteAppService : CrudAppService<
          input.Name,
          input.Surname,
          input.Email,
-         input.Telephone,
-         input.PolicyIds
+         input.Telephone
         );
 
         //save
@@ -135,35 +158,42 @@ public class UtenteAppService : CrudAppService<
 
         //return confirm DTO
         var res = ObjectMapper.Map<User, UserDto>(user);
-        var userPolicies = await _userManager.GetUserPoliciesAsync(user);
-        res.Policies = ObjectMapper.Map<List<Policy>, List<PolicyDto>>(userPolicies);
+    
         return new OkObjectResult(res);
     }
 
 
     [AllowAnonymous]
     [HttpPut]
-    [DisableValidation]
-    public async Task<ActionResult<UserDto>> updateUserPolicies([FromBody] UpdateUserPolicyDto input)
+    public async Task<ActionResult<UserDetailedDto>> AssignUserPolicies([FromBody] UpdateUserPolicyDto input)
     {
-        //find user
-        var user = await _userRepository.GetWithDetails(input.Id);
+        //Get the IQueryable<Device> from the repository
+        var queryable = await _repository.CompleteJoin();
 
+        //find device
+        var query = from u in queryable
+                    where u.Id == input.Id
+                    select u;
+
+        var user = await AsyncExecuter.FirstOrDefaultAsync(query);
+
+        //check device null
         if (user == null)
         {
             return new NotFoundResult();
         }
 
-        //updatePolicy
-        await _userManager.SetPoliciesAsync(user, input.PolicyIds);
+
+        //set policies
+        List<Policy> settedPolicies = await _userManager.SetPoliciesAsync(user, input.PolicyIds);
+
 
         //save
         await Repository.UpdateAsync(user);
 
         //return confirm DTO
-        var res = ObjectMapper.Map<User, UserDto>(user);
-        var userPolicies = await _userManager.GetUserPoliciesAsync(user);
-        res.Policies = ObjectMapper.Map<List<Policy>, List<PolicyDto>>(userPolicies);
+        var res = ObjectMapper.Map<User, UserDetailedDto>(user);
+        res.Policies = ObjectMapper.Map<List<Policy>, List<PolicyDto>>(settedPolicies);
         return new OkObjectResult(res);
     }
 }

@@ -115,8 +115,8 @@ public class GestioneDeviceDbContext :
             b.HasMany(x => x.UserPolicies)
            .WithOne()
            .HasForeignKey(x => x.PolicyId)
-           .IsRequired();
-
+           .IsRequired()
+           .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.Entity<Device>(b =>
@@ -145,13 +145,14 @@ public class GestioneDeviceDbContext :
             .WithMany()
             .HasForeignKey(x => x.UserId)
             .IsRequired();
+
         });
 
         builder.Entity<SoftwareVersion>(b =>
         {
             b.ToTable(GestioneDeviceConsts.DbTablePrefix + "SoftwareVersions", GestioneDeviceConsts.DbSchema);
 
-            b.HasKey(sv => sv.Id);             
+            b.HasKey(sv => sv.Id);
         });
 
         builder.Entity<Feature>(b =>
@@ -197,12 +198,17 @@ public class GestioneDeviceDbContext :
             b.HasOne<User>()
                   .WithMany(d => d.UserPolicies)
                   .HasForeignKey(df => df.UserId)
-                  .IsRequired();
+                  .IsRequired()
+                  .OnDelete(DeleteBehavior.Cascade);
+
 
             b.HasOne<Policy>()
                   .WithMany()
                   .HasForeignKey(df => df.PolicyId)
                   .IsRequired();
+
+
+
         });
     }
 }

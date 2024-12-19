@@ -216,8 +216,7 @@ public class DeviceAppService : CrudAppService<
         }
 
         //update device
-        var deviceFeatures = new List<Feature>();
-        (device, deviceFeatures) = await _deviceManager.UpdateAsync(
+        var deviceFeatures = await _deviceManager.UpdateAsync(
          device,
          input.Name,
          input.Type,

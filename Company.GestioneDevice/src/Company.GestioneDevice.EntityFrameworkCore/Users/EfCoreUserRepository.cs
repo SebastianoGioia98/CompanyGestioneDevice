@@ -20,16 +20,6 @@ public class EfCoreUserRepository : EfCoreRepository<GestioneDeviceDbContext, Us
     }
 
 
-
-    public async Task<User?> GetWithDetails(Guid id)
-    {
-        return await (await GetQueryableAsync())
-            .Include(u => u.UserPolicies)
-            .FirstOrDefaultAsync(u => u.Id == id);
-
-    }
-
-
     public async Task<IQueryable<User>> CompleteJoin()
     {
         var queryable = await GetQueryableAsync();
@@ -37,6 +27,18 @@ public class EfCoreUserRepository : EfCoreRepository<GestioneDeviceDbContext, Us
             .Include(u => u.UserPolicies)
             .AsQueryable();
     }
+
+
+
+    public async Task<User?> GetWithDetails(Guid id)
+    {
+        return await (await GetQueryableAsync())
+            .Include(u => u.UserPolicies)
+            .FirstOrDefaultAsync(u => u.Id == id);
+    }
+
+
+
 
 
 }

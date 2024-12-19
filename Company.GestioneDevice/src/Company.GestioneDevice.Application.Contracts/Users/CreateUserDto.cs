@@ -27,10 +27,8 @@ public class CreateUserDto
     [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
     public string Email { get; set; }
 
-
     [StringLength(GestioneDeviceSharedConsts.MaxNameLength)]
     public string? Telephone { get; set; }
 
-    [Required]
     public List<Guid> PolicyIds { get; set; } = new List<Guid>();
 }
