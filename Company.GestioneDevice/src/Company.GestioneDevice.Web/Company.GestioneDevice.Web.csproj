@@ -30,12 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Pages\**\*.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Pages\**\*.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Remove="Scripts\Services\storeManager.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Scripts\Services\storeManager.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,6 +72,10 @@
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.Studio.Client.AspNetCore" Version="0.9.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Vue\Pages\" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,27 @@
+﻿@using Microsoft.Extensions.Configuration
+@using Volo.Abp.Users;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+</head>
+
+<body>
+
+    <div id="myApp">
+        <v-app>
+            <left-menu></left-menu>
+            <v-main class="vMain">
+                @RenderBody()
+            </v-main>
+        </v-app>
+    </div>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("bodyScripts", false)
+
+</body>
+
+</html>
+
