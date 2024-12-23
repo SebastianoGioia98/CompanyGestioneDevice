@@ -21,6 +21,12 @@ public class Program
         {
             Log.Information("Starting web host.");
             var builder = WebApplication.CreateBuilder(args);
+            // Disabilita la validazione antiforgery
+            //builder.Services.AddAntiforgery(options =>
+            //{
+            //    options.HeaderName = "X-CSRF-TOKEN";  // Imposta un nome personalizzato per il token antiforgery, se necessario
+            //    options.SuppressXFrameOptionsHeader = true; // Opzionale: disabilita l'intestazione X-Frame-Options se necessario
+            //});
             builder.Host
                 .AddAppSettingsSecretsJson()
                 .UseAutofac()
@@ -39,6 +45,7 @@ public class Program
                         .WriteTo.Async(c => c.Console())
                         .WriteTo.Async(c => c.AbpStudio(services));
                 });
+
             await builder.AddApplicationAsync<GestioneDeviceWebModule>();
             var app = builder.Build();
             await app.InitializeApplicationAsync();

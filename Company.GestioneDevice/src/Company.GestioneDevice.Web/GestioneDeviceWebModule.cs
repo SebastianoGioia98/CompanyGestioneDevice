@@ -49,6 +49,7 @@ using Volo.Abp.OpenIddict;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.SettingManagement.Web;
 using Volo.Abp.Studio.Client.AspNetCore;
+using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 
 namespace Company.GestioneDevice.Web;
 
@@ -66,7 +67,7 @@ namespace Company.GestioneDevice.Web;
     typeof(AbpSwashbuckleModule),
     typeof(AbpAspNetCoreSerilogModule)
 )]
-public class GestioneDeviceWebModule : AbpModule
+public class GestioneDeviceWebModule : AbpModule 
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
@@ -238,6 +239,9 @@ public class GestioneDeviceWebModule : AbpModule
                 options.CustomSchemaIds(type => type.FullName);
             }
         );
+
+
+
     }
 
 
@@ -265,8 +269,8 @@ public class GestioneDeviceWebModule : AbpModule
         app.MapAbpStaticAssets();
         app.UseAbpStudioLink();
         app.UseRouting();
-        app.UseAbpSecurityHeaders();
-        app.UseAuthentication();
+        app.UseAbpSecurityHeaders(); //
+        app.UseAuthentication();   //
         app.UseAbpOpenIddictValidation();
 
         if (MultiTenancyConsts.IsEnabled)
@@ -276,7 +280,7 @@ public class GestioneDeviceWebModule : AbpModule
 
         app.UseUnitOfWork();
         app.UseDynamicClaims();
-        app.UseAuthorization();
+        app.UseAuthorization();   //
         app.UseSwagger();
         app.UseAbpSwaggerUI(options =>
         {
