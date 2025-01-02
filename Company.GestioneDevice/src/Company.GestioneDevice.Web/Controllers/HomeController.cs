@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WarpDrive.Web.Controllers;
+namespace Company.GestioneDevice.Web.Controllers;
 
 public class HomeController : Controller
 {
