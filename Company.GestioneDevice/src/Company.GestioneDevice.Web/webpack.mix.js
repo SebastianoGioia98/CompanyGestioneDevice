@@ -22,3 +22,4 @@ mix.copy("./Scripts/commonModule.js", "./wwwroot/js/commonModule.js");
 mix.vue()
     .js("./Scripts/Services/serviceBuilder.js", "js/site.js")
     .js(["./Scripts/Home/homePageBuilder.js"], "js/homeIndex.js")
+    .js(["./Scripts/Device/devicePageBuilder.js"], "js/deviceIndex.js")
