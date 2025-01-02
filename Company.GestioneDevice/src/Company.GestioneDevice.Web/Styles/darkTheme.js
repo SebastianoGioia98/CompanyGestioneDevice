@@ -1,25 +1,45 @@
 ﻿export default {
     dark: true,
     colors: {
-        background: '#0A1929',
+
+        //arancione
+        primary: '#e27609', //005FCE
+        'OnPrimary': '#333333',
+        //grigio
+        secondary: '#b4b4b4',
+
+
+
+        //superfici
+        'surface-0':'#111211',
+        'surface-1': '#161616',
+        'surface-2': '#262626'
+
+
+
+
+
+
+
+        //background: '#FF7213',
         //'on-background': '#E96920',
 
-        'surface-darken': '#001E3C',
-        surface: '#002D5B',  //#2A2A72
-        'surface1': '#1B4169',
-        primary: '#007FFF', //005FCE
-        'primary-darken': '#004C99', //005FCE
+        //'surface-darken': '#001E3C',
+        //surface: '#002D5B',  //#2A2A72
+        //'surface1': '#1B4169',
+       
+        //'primary-darken': '#004C99', //005FCE
 
 
-        'on-surface-variant': '#E3E3ED',
+        //'on-surface-variant': '#E3E3ED',
         //'on-surface': '#E96920',
-        'text': 'E3E3ED',
+        //'text': 'E3E3ED',
 
         //readiness colors
-        'wdml-orange': '#BB4F12',
-        'wdml-yellow': '#CEC600',
-        'wdml-green': '#33C917',
-        'wdml-blu': '#005FCE',
+        //'wdml-orange': '#BB4F12',
+        //'wdml-yellow': '#CEC600',
+       // 'wdml-green': '#33C917',
+        //'wdml-blu': '#005FCE',
 
 
         //'surface2': '#39399a',
@@ -34,7 +54,7 @@
         //'primary-container': '#9CCAFF',
         //'onPrimary-container': '#00397B',
 
-        secondary: '#E96920',
+      
         //'onSecondary': '#FADAC7',
         //'secondary-container': '#BB4F12',
         //'onSecondary-container': '#381805',
@@ -51,7 +71,7 @@
         'border-color': '#000000',
         'border-opacity': 0,
         'high-emphasis-opacity': 0.87,
-        'medium-emphasis-opacity': 0.60,
+        'medium-emphasis-opacity': 1,
         'disabled-opacity': 0.38,
         'idle-opacity': 0.04,
         'hover-opacity': 0.04,
