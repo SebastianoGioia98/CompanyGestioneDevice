@@ -30,13 +30,14 @@ html {
 .vMain {
     height: 100vh;
     display: flex;
+    background: rgb(var(--v-theme-surface-0));
 }
 
 
 .mainContainer {
     margin: 0.4rem 0.4rem 0.4rem 0 !important;
     border-radius: 1rem;
-    background: rgb(var(--v-theme-background));
+    background: rgb(var(--v-theme-surface-0));
 }
 
 
@@ -49,9 +50,8 @@ html {
 
 /*     ===LEFT MENU ===  */
 .expandedMenu {
-    background-color: rgb(var(--v-theme-surface-darken)) !important
+    background-color: rgb(var(--v-theme-surface-2)) !important;
 }
-
 
 .menuContent {
     height: 100%;
@@ -61,9 +61,10 @@ html {
 }
 
 
+
 .selectedMenuVoice {
-    background-color: rgb(var(--v-theme-surface)) !important;
-    // color: rgb(var(--v-theme-onSecondary)) !important;
+    background-color: rgb(var(--v-theme-primary)) !important;
+    color: rgb(var(--v-theme-OnPrimary)) !important; //rgb(var(--v-theme-onSecondary)) !important;
 }
 
 
@@ -71,9 +72,10 @@ html {
     background-color: transparent !important;
 
     .menuContent {
-        margin: 0.6rem 1rem;
-        height: calc(100% - 1.2rem);
-        background-color: rgb(var(--v-theme-surface-darken));
+        margin: 1.3rem 1.2rem 1.3rem .8rem;
+        height: calc(100% - 2.6rem);
+        background-color: rgb(var(--v-theme-surface-2)) !important;
+        color: white;
         box-sizing: border-box;
         border-radius: .8rem;
     }

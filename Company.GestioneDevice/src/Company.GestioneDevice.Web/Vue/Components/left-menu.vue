@@ -6,8 +6,8 @@
             <div class="menuContent">
                 <v-list :class="rail? 'pt-0': ''">
                     <v-list-item title="" @click="openCloseMenu" align="center" class="pt-6 pb-2">
-                        <img v-if="rail" src="/assets/images/logo_short.png" width="100%" />
-                        <img v-else src="/assets/images/logo_large.png" width="80%" />
+                        <img v-if="rail" src="/images/logo/logo_short.png" width="100%" />
+                        <img v-else src="/images/logo/logo_large.png" width="80%" />
                     </v-list-item>
                 </v-list>
 
@@ -58,64 +58,17 @@
                         redirect: "/"
                     },
                     {
-                        title: "Projects",
+                        title: "Devices",
                         icon: "mdi-file-multiple",
-                        redirect: "/project/"
+                        redirect: "/devices/"
                     },
                     {
-                        title: "Datasets Tree",
+                        title: "Users",
                         icon: "mdi-file-tree",
-                        redirect: "/datasettree/"
-                    },
-                    {
-                        title: "Datasets",
-                        icon: "mdi-database",
-                        redirect: "/dataset/"
-                    },
-                    {
-                        title: "Economics",
-                        icon: "mdi-variable",
-                        redirect: "/economic/"
-                    },
-                    {
-                        title: "Business Scenario",
-                        icon: "mdi-domain",
-                        redirect: "/business/"
-                    },
-
-                    {
-                        title: "ML Ops",
-                        icon: "mdi-cloud-tags",
-                        redirect: "/mlops/"
-                    },
-                    {
-                        title: "Background Jobs",
-                        icon: "mdi-progress-clock",
-                        redirect: "/backgroundjob/"
-                    },
-                    {
-                        title: "User Management",
-                        icon: "mdi-account-group",
-                        redirect: "/usermanagement/"
-                    },
-
+                        redirect: "/users/"
+                    }
                 ],
                 pages_bottom: [
-                    /*                    {
-                                            title: "Settings",
-                                            icon: "mdi-cog",
-                                            redirect: "/setting/"
-                                        },*/
-                    {
-                        title: "Documentation",
-                        icon: "mdi-book",
-                        redirect: "/documentation/"
-                    },
-                    {
-                        title: "My Account",
-                        icon: "mdi-account",
-                        redirect: "/user/"
-                    },
                     {
                         title: "Logout",
                         icon: "mdi-logout",
@@ -138,12 +91,12 @@
             openCloseMenu() {
                 let that = this;
                 that.rail = !that.rail;
-                that.userAuthStore.menuOpen = that.rail;
+       
                 let main = document.getElementById("myApp");
                 if (!that.rail)
-                    main.querySelector(".v-application").classList.add("expandedMenu");
+                    main.querySelector(".vMain").classList.add("expandedMenu");
                 else
-                    main.querySelector(".v-application").classList.remove("expandedMenu");
+                    main.querySelector(".vMain").classList.remove("expandedMenu");
             },
             isCurrentPage: function (voice) {
                 if (window.location.pathname.length == 1)
