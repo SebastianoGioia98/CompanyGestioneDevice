@@ -1,15 +1,19 @@
-﻿
+﻿import ApiCallerHelper from "./apiCallerHelper.js";
+
+
 
 export default class Services {
 
 	constructor() {
-		// Crea un'istanza di BusinessScenarioDataHanlder
+
 		
 	}
 
-	//get apiCallerHelper() {
-	//	return new ApiCallerHelper();
-	//}
+	get apiCallerHelper() {
+		return new ApiCallerHelper();
+	}
+
+
 
 
 	getDialogWidthVuetify(breakpoint) {
