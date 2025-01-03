@@ -93,3 +93,61 @@ html {
         width: 0px;
     }
 }
+
+
+
+/*     === TABLE ===  */
+.dataTable {
+    //background-color: rgb(var(--v-theme-background)) !important;
+    border: solid 2px rgb(var(--v-theme-surface));
+    //background-color: transparent !important;
+
+    thead {
+        // background-color: rgb(var(--v-theme-surface)); /* Cambia il colore dell'header */
+        //color: white; /* Colore del testo dell'header */
+        th {
+            //border-bottom: 1px solid white !important;
+
+            //.v-data-table-header__content::before {
+            //    content: ""; /* Necessario per visualizzare lo pseudo-elemento */
+                //display: block; /* Per trattarlo come un elemento a blocco */
+            //    width: 21px;
+            //    height: 21px;
+            //    background-color: rgba(0, 0, 0, 0); /* Colore nero trasparente (50%) */
+            //    top: 0;
+            //    left: 0;
+            //}
+        }
+    }
+
+    tbody tr td {
+        border-top: 2px solid rgb(var(--v-theme-surface)) !important;
+    }
+
+
+    tbody tr:hover {
+        background-color: rgb(var(--v-theme-primary));
+        // color: rgb(var(--v-theme-onPrimary-container));
+
+        button {
+            color: rgb(var(--v-theme-text));
+        }
+    }
+    //.v-table__wrapper{
+    //    padding-right:0.7rem;
+    //}
+}
+
+.isSortable {
+    //background-color: orange;
+
+    .v-data-table-header__content::before {
+        content: ""; /* Necessario per visualizzare lo pseudo-elemento */
+        width: 21px;
+        height: 21px;
+        background-color: rgba(0, 0, 0, 0); /* Colore nero trasparente (50%) rgba(0, 0, 0, 0);*/
+        top: 0;
+        left: 0;
+    }
+}
+

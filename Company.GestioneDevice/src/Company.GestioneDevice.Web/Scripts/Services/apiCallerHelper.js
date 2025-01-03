@@ -1,4 +1,6 @@
-﻿export default class ApiCallerHelper {
+﻿
+import axios from "axios";
+export default class ApiCallerHelper {
 
     //getBearerToken() {
     //	const tokenUrl = `${commonModule.webBaseUrl}/AuthHelper/GetAccessToken`;
@@ -6,14 +8,11 @@
     //	return token;
     //}
 
+
     callGet(urlToCall) {
         return new Promise((resolve, reject) => {
-            window
-                .axios({
-                    method: "get",
-                    headers: {},
-                    url: urlToCall,
-                })
+            
+                axios.get(urlToCall)
                 .then(result => {
                     return resolve(result);
                 })
