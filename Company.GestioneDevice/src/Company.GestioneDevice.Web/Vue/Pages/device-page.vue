@@ -10,25 +10,25 @@
 
 
 
-        <!--    === Filter Section ===   -->
+        <!--    === Tools Section ===   -->
         <v-row no-gutters class="mb-4 align-center">
 
 
-            <!--<v-text-field label="Search" prepend-inner-icon="mdi-magnify"
-                      variant="outlined" max-width="500"
-                      density="compact"
-                      @input="filteringByName"
-                      v-model="filterObject.name"
-                      hide-details single-line rounded="lg"
-                      class="outlineTextField" base-color="surface">
-        </v-text-field>
+            <v-text-field label="Search" prepend-inner-icon="mdi-magnify"
+                          variant="outlined" max-width="500"
+                          density="compact"
+                          hide-details single-line rounded="lg"
+                          class="outlineTextField" base-color="surface">
+            </v-text-field>
 
-        <v-btn size="small" class="ml-6" @click="expandFilter = !expandFilter" icon="mdi-filter-multiple"></v-btn>
+            <v-btn size="small" class="ml-6" @click="expandFilter = !expandFilter" icon="mdi-filter-multiple"></v-btn>
 
 
-        <v-btn @click="addDeviceDialog = true" color="primary" class="ml-auto">
-            Add Device
-        </v-btn>-->
+            <v-btn @click="onBtnAddClick()" color="primary" class="ml-auto">
+                Add Device
+            </v-btn>
+
+
             <!--<v-expand-transition>
             <div v-show="expandFilter" class="w-100">
                 <div class="d-flex w-100 align-center justify-start ga-4 mt-4">
@@ -105,8 +105,8 @@
 
         <!--    === Dialogs ===   -->
         <dialog-delete v-model="showDeleteDialog" :item="selectedDevice" @close="onDialogDeleteClose"></dialog-delete>
+        <dialog-add v-model="showAddDialog" @close="onDialogAddClose"></dialog-add>
 
-        
     </v-container>
 </template>
 
@@ -131,7 +131,7 @@
 
                 //dialog property
                 showDeleteDialog: false,
-
+                showAddDialog: false,
 
                 //   === table properties
                 loading: true,
@@ -243,16 +243,24 @@
             //btn methods
             onBtnDeleteClick(item) {
                 let that = this;
-               
+
 
                 that.selectedDevice = item;
 
                 //apro il dialog
                 that.showDeleteDialog = true;
                 console.log("on onDeleteBtnClick, item: ", that.showDeleteDialog);
-             
+
             },
 
+            onBtnAddClick() {
+                let that = this;
+
+                //apro il dialog
+                that.showAddDialog = true;
+                console.log("on onBtnAddClick");
+
+            },
 
 
 
@@ -265,9 +273,9 @@
 
 
                 if (e.state === false) return;
-                    
 
-      
+
+
 
 
                 //SET Loading State
@@ -295,6 +303,15 @@
                     });
             },
 
+            onDialogAddClose(e) {
+                let that = this;
+                console.log("onDialogAddClose, res: ", e);
+
+                that.showAddDialog = false;
+
+
+                if (e.state === false) return;
+            },
 
             //    === other mothods
             getDate(dateString) {

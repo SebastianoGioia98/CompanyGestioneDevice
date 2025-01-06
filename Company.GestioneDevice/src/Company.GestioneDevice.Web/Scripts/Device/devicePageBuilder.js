@@ -20,7 +20,7 @@ import darkTheme from "../../Styles/darkTheme.js";
 import leftMenu from "../../Vue/Components/left-menu.vue";
 import devicePage from "../../Vue/Pages/device-page.vue";
 import dialogDelete from "../../Vue/Components/dialog-delete.vue";
-
+import dialogAdd from "../../Vue/Components/dialog-add.vue";
 
 const app = createApp();
 
@@ -55,4 +55,5 @@ app.use(pinia);
 app.component("left-menu", leftMenu);
 app.component("device-page", devicePage);
 app.component("dialog-delete", dialogDelete);
+app.component("dialog-add", dialogAdd);
 app.mount("#myApp");
