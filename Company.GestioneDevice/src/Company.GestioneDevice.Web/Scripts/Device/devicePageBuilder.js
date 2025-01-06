@@ -19,6 +19,7 @@ import darkTheme from "../../Styles/darkTheme.js";
 //component imports
 import leftMenu from "../../Vue/Components/left-menu.vue";
 import devicePage from "../../Vue/Pages/device-page.vue";
+import dialogDelete from "../../Vue/Components/dialog-delete.vue";
 
 
 const app = createApp();
@@ -53,4 +54,5 @@ app.use(vuetify);
 app.use(pinia);
 app.component("left-menu", leftMenu);
 app.component("device-page", devicePage);
+app.component("dialog-delete", dialogDelete);
 app.mount("#myApp");
