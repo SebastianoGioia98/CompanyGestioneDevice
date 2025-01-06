@@ -13,5 +13,11 @@
 	}
 
 
+	deleteDevice(id) {
+		const urlToCall = this.url + id;
+		return this.restFulApiCallerHelper.callDelete(urlToCall);
+	}
+
+
 
 }

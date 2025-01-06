@@ -2,9 +2,7 @@
 
     <v-container fluid class="mainContainer d-flex flex-column">
 
-
-
-        <!--Title section-->
+        <!--    === Title Section ===   -->
         <v-row no-gutters class="align-center mb-8">
             <h1 class="pageTitle">Devices</h1>
         </v-row>
@@ -12,9 +10,7 @@
 
 
 
-
-
-        <!--Filter section-->
+        <!--    === Filter Section ===   -->
         <v-row no-gutters class="mb-4 align-center">
 
 
@@ -63,14 +59,7 @@
 
 
 
-
-
-
-
-
-
-
-        <!--Table section-->
+        <!--    === Table Section ===   -->
         <v-row no-gutters class="d-flex flex-column h-100">
             <v-card class="elevation-0 w-100  flex-grow-1 d-flex flex-column" rounded="lg" color="transparent">
                 <v-data-table-server v-model:items-per-page="itemsPerPage"
@@ -87,38 +76,9 @@
                                      :items-per-page-options="paginatorOptions">
 
 
-
-
-
-                    <!-- Slot per personalizzare gli header -->
-                    <!--<template v-slot:headers="{ item }">
-                        <tr>
-                            <th :class="isOredered">
-                                {{ header.text }}
-                            </th>
-                        </tr>
-                    </template>-->
-
-
-
-
-
-       
-
-
                     <template v-slot:item.type="{ item }">
                         {{item.type}}
                     </template>
-
-
-                    <!--<template v-slot:item.model="{ item }">
-                        {{item.model}}
-                    </template>-->
-
-
-
-
-
 
                     <template v-slot:item.creationTime="{ item }">
                         {{ getDate(item.creationTime) }}
@@ -131,7 +91,7 @@
                                        size="x-small"
                                        v-bind="props"
                                        class=" ml-3"
-                                       @click.stop="deleteItem(item)">
+                                       @click.stop="onBtnDeleteClick(item)">
                                 </v-btn>
                             </template>
                         </v-tooltip>
@@ -142,12 +102,15 @@
 
 
 
+
+        <!--    === Dialogs ===   -->
+        <dialog-delete v-model="showDeleteDialog" :item="selectedDevice" @close="onDialogDeleteClose"></dialog-delete>
+
+        
     </v-container>
 </template>
 
 <style scoped>
-
- 
 </style>
 
 
@@ -161,10 +124,19 @@
             const theme = useTheme();
             return {
                 deviceList: [],
-                loading: false,
+
+                //state property
+                loadingState: false,
+                selectedDevice: {},
+
+                //dialog property
+                showDeleteDialog: false,
+
 
                 //   === table properties
-                totalItems : 0,
+                loading: true,
+                totalItems: 0,
+                itemsPerPage: 10,
                 headers: [
                     {
                         title: "Name",
@@ -190,20 +162,20 @@
                         sortable: true,
                         key: 'model',
                         headerProps: {
-    class: 'isSortable' // Add custom CSS class
-},
+                            class: 'isSortable' // Add custom CSS class
+                        },
                     },
                     {
                         title: "Owner",
                         align: 'center',
                         sortable: false,
                         key: 'user.username'
-                     },
-                     {
-                         title: "Create Time",
-                         align: 'center',
-                         sortable: false,
-                         key: 'creationTime'
+                    },
+                    {
+                        title: "Create Time",
+                        align: 'center',
+                        sortable: false,
+                        key: 'creationTime'
                     },
                     {
                         title: "Actions",
@@ -241,20 +213,25 @@
 
 
                 let that = this;
+
+                //SET Loading State
                 that.loading = true;
+
+                //call to  getDevices
                 services.ApiCallerDevices
                     .getDevices().then(res => {
-                        
+                        //load deviceList
                         that.deviceList = res.data;
                         that.totalItems = that.deviceList.length;
                         console.log("deviceList: ", that.deviceList);
                         console.log("totalItems: ", that.totalItems);
                     }).finally(_ => {
+                        //UNSET Loading State
                         that.loading = false;
                     });
 
 
-                
+
 
             },
 
@@ -262,13 +239,60 @@
 
             },
 
-            deleteItem(item) {
-                let that = this;
-                console.log("on DeleteItem, item: ", item);
 
-                //that.itemToDelete = item;
-                //that.showDelete = true;
-                
+            //btn methods
+            onBtnDeleteClick(item) {
+                let that = this;
+               
+
+                that.selectedDevice = item;
+
+                //apro il dialog
+                that.showDeleteDialog = true;
+                console.log("on onDeleteBtnClick, item: ", that.showDeleteDialog);
+             
+            },
+
+
+
+
+            //dialog methods
+            onDialogDeleteClose(e) {
+                let that = this;
+                console.log("onDialogDeleteClose, res: ", e);
+
+                that.showDeleteDialog = false;
+
+
+                if (e.state === false) return;
+                    
+
+      
+
+
+                //SET Loading State
+                that.loadingState = true;
+
+                //call to  getDevices
+                services.ApiCallerDevices
+                    .deleteDevice(e.id)
+                    .then((res) => {
+                        console.log("on ApiCallerDevices.deleteDevice, res", res);
+
+                        //preparo il messaggio per lo snackbar
+                    })
+                    .catch((err) => {
+                        console.log("on ApiCallerDevices.deleteDevice, err", err);
+
+                        //preparo il messaggio per lo snackbar
+                    })
+                    .finally(() => {
+                        //UNSET Loading State
+                        that.loading = false;
+
+                        //chiedo la lista dei device e riempio la deviceList
+                        that.refeshDeviceList();
+                    });
             },
 
 
