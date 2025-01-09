@@ -2,7 +2,7 @@
     <v-dialog min-width="350" max-width="400"
              :modelValue="modelValue"
          persistent>
-        <v-card prepend-icon="mdi-delete-alter" title="Delete"
+        <v-card prepend-icon="mdi-delete-alert" title="Delete"
                 text="are you sure you want to delete this items?"
                >
             <template v-slot:actions>

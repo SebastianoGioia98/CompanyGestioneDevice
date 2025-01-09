@@ -59,12 +59,12 @@
                     },
                     {
                         title: "Devices",
-                        icon: "mdi-file-multiple",
+                        icon: "mdi-devices",
                         redirect: "/devices/"
                     },
                     {
                         title: "Users",
-                        icon: "mdi-file-tree",
+                        icon: "mdi-account",
                         redirect: "/users/"
                     }
                 ],

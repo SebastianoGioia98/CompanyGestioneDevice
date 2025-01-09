@@ -58,54 +58,53 @@
 
 
 
+            <!--    === Table Section ===   -->
+            <v-row no-gutters class="d-flex flex-column h-100">
+                <v-card class="elevation-0 w-100  flex-grow-1 d-flex flex-column" rounded="lg" color="transparent">
+                    <v-data-table-server v-model:items-per-page="itemsPerPage"
+                                         :headers="headers"
+                                         :items-length="totalItems"
+                                         :items="deviceList"
+                                         style="height: 100% !important"
+                                         :loading="loading"
+                                         loading-text="Loading, please wait..."
+                                         class="elevation-0 dataTable"
+                                         height="100%" width="100%"
+                                         @click:row="openContent"
+                                         @update:options="refeshDeviceList" color="surface1"
+                                         :items-per-page-options="paginatorOptions">
 
-        <!--    === Table Section ===   -->
-        <v-row no-gutters class="d-flex flex-column h-100">
-            <v-card class="elevation-0 w-100  flex-grow-1 d-flex flex-column" rounded="lg" color="transparent">
-                <v-data-table-server v-model:items-per-page="itemsPerPage"
-                                     :headers="headers"
-                                     :items-length="totalItems"
-                                     :items="deviceList"
-                                     style="height: 100% !important"
-                                     :loading="loading"
-                                     loading-text="Loading, please wait..."
-                                     class="elevation-0 dataTable"
-                                     height="100%" width="100%"
-                                     @click:row="openContent"
-                                     @update:options="refeshDeviceList" color="surface1"
-                                     :items-per-page-options="paginatorOptions">
 
+                        <template v-slot:item.type="{ item }">
+                            {{item.type}}
+                        </template>
 
-                    <template v-slot:item.type="{ item }">
-                        {{item.type}}
-                    </template>
+                        <template v-slot:item.creationTime="{ item }">
+                            {{ getDate(item.creationTime) }}
+                        </template>
 
-                    <template v-slot:item.creationTime="{ item }">
-                        {{ getDate(item.creationTime) }}
-                    </template>
-
-                    <template v-slot:item.actions="{ item }">
-                        <v-tooltip text="Delete Device" location="bottom">
-                            <template v-slot:activator="{ props }">
-                                <v-btn icon="mdi-delete"
-                                       size="x-small"
-                                       v-bind="props"
-                                       class=" ml-3"
-                                       @click.stop="onBtnDeleteClick(item)">
-                                </v-btn>
-                            </template>
-                        </v-tooltip>
-                    </template>
-                </v-data-table-server>
-            </v-card>
-        </v-row>
-
+                        <template v-slot:item.actions="{ item }">
+                            <v-tooltip text="Delete Device" location="bottom">
+                                <template v-slot:activator="{ props }">
+                                    <v-btn icon="mdi-delete"
+                                           size="x-small"
+                                           v-bind="props"
+                                           class=" ml-3"
+                                           @click.stop="onBtnDeleteClick(item)">
+                                    </v-btn>
+                                </template>
+                            </v-tooltip>
+                        </template>
+                    </v-data-table-server>
+                </v-card>
+            </v-row>
 
 
 
-        <!--    === Dialogs ===   -->
-        <dialog-delete v-model="showDeleteDialog" :item="selectedDevice" @close="onDialogDeleteClose"></dialog-delete>
-        <dialog-add v-model="showAddDialog" @close="onDialogAddClose"></dialog-add>
+
+            <!--    === Dialogs ===   -->
+            <dialog-delete v-model="showDeleteDialog" :item="selectedDevice" @close="onDialogDeleteClose"></dialog-delete>
+            <dialog-add v-model="showAddDialog" @close="onDialogAddClose"></dialog-add>
 
     </v-container>
 </template>
@@ -202,7 +201,7 @@
             let that = this;
 
             //chiedo la lista dei device e riempio la deviceList
-            that.refeshDeviceList();
+           // that.refeshDeviceList();
         },
         methods: {
 
@@ -238,6 +237,11 @@
             openContent() {
 
             },
+
+            openContent(value, row) {
+                window.location.href = "devices/" + row.item.id;
+            },
+
 
 
             //btn methods
