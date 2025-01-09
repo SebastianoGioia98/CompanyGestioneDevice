@@ -24,5 +24,11 @@
 	}
 
 
+	getDeviceGeolocalization(id) {
+		const urlToCall = this.url + `geolocalization/` + id;
+		return this.restFulApiCallerHelper.callGet(urlToCall);
+	}
+
+
 
 }

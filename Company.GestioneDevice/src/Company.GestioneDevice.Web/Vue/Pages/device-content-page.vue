@@ -34,7 +34,7 @@
                         <v-list-item-title>Update Device Software</v-list-item-title>
                     </v-list-item>
                     <v-list-item class="listItem">
-                        <v-list-item-title>Find Device</v-list-item-title>
+                        <v-list-item-title @click="getDeviceGeolocalization">Find Device</v-list-item-title>
                     </v-list-item>
                 </v-list>
             </v-menu>
@@ -126,6 +126,25 @@
 
         <!--    === Dialogs ===   -->
 
+<!--    Geolocalization   -->
+        <v-dialog min-width="350" max-width="400"
+                  :modelValue="showGeolocalizationDialog"
+                  persistent>
+            <v-card prepend-icon="mdi-map-marker" title="Your Device is Here">
+               
+                <v-card-text>
+                    latitude: {{geolocalization.latitude}}, longitude: {{geolocalization.longitude}}
+                </v-card-text>
+
+
+                <template v-slot:actions>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="showGeolocalizationDialog = false">
+                        OK
+                    </v-btn>
+                </template>
+            </v-card>
+        </v-dialog>
 
 
 
@@ -152,6 +171,12 @@
             return {
                 deviceList: [],
                 deviceDetail: null,
+                geolocalization: {
+                    latitude: 0,
+                    longitude: 0
+                },
+
+
 
                 //state property
                 loadingState: false,
@@ -160,7 +185,8 @@
 
                 //dialog property
                 showEditDialog: false,
-
+                showGeolocalizationDialog:false,
+               
 
                 //menu properties
 
@@ -239,25 +265,34 @@
 
 
             //   === btn methods
-            onBtnDeleteClick(item) {
-                let that = this;
 
 
-                that.selectedDevice = item;
 
-                //apro il dialog
-                that.showDeleteDialog = true;
-                console.log("on onDeleteBtnClick, item: ", that.showDeleteDialog);
 
-            },
 
             //    === menu methods
             onClick() {
                 console.log("CLICKED")
             },
 
+            getDeviceGeolocalization() {
+                let that = this;
+                services.ApiCallerDevices
+                    .getDeviceGeolocalization(that.deviceDetail.id).then(res => {
+                        console.log("On getDeviceGeolocalization, res: ", res.data);
+                        that.geolocalization = res.data;
+                        that.showGeolocalizationDialog = true;
+                    });
+            },
+
+
+
 
             //    === dialog methods
+
+
+
+
 
 
 
