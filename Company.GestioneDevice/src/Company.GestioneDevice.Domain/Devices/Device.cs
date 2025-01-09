@@ -108,7 +108,7 @@ public class Device : AuditedAggregateRoot<Guid>
     {
         Check.NotNull(softwareVersion, nameof(softwareVersion));
 
-        this.SoftwareVersions.Add(softwareVersion);
+        this.SoftwareVersions.Insert(0, softwareVersion);
     }
 
 }

@@ -173,7 +173,7 @@ public class DeviceAppService : CrudAppService<
         //softwareVersion
         if (queryResult.Device.SoftwareVersions.Any())
         {
-            deviceDto.LastSoftwareVersion = ObjectMapper.Map<SoftwareVersion, SoftwareVersionLookupDto>(queryResult.Device.SoftwareVersions[0]);
+            deviceDto.LastSoftwareVersion = ObjectMapper.Map<SoftwareVersion, SoftwareVersionLookupDto>(queryResult.Device.SoftwareVersions[queryResult.Device.SoftwareVersions.Count-1]);
         }
 
         //DeviceFeature
@@ -332,13 +332,14 @@ public class DeviceAppService : CrudAppService<
             return new NotFoundResult();
         }
 
-        var newsoftwareVersion = ObjectMapper.Map<SoftwareVersionLookupDto, SoftwareVersion>(input.NewSoftwareVersion);
-        device.UpdateSoftwareVersion(newsoftwareVersion);
+        var newSoftwareVersion = ObjectMapper.Map<SoftwareVersionLookupDto, SoftwareVersion>(input.NewSoftwareVersion);
+        device.UpdateSoftwareVersion(newSoftwareVersion);
 
-
+        //save
+        await Repository.UpdateAsync(device);
 
         //return confirm Dto
-        var res = ObjectMapper.Map<SoftwareVersion, SoftwareVersionDto>(newsoftwareVersion);
+        var res = ObjectMapper.Map<SoftwareVersion, SoftwareVersionDto>(newSoftwareVersion);
 
         return res;
 
