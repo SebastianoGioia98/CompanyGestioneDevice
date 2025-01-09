@@ -11,11 +11,16 @@
 		const urlToCall = this.url + `device-list`;
 		return this.restFulApiCallerHelper.callGet(urlToCall);
 	}
-
+	
 
 	deleteDevice(id) {
 		const urlToCall = this.url + id;
 		return this.restFulApiCallerHelper.callDelete(urlToCall);
+	}
+
+	getDeviceDetails(id) {
+		const urlToCall = this.url + `device-by-id/` + id;
+		return this.restFulApiCallerHelper.callGet(urlToCall);
 	}
 
 

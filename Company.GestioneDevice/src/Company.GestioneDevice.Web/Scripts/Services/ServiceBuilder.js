@@ -64,6 +64,29 @@ export default class Services {
 		return commonModule.signalRHubUrl;
 	}
 
+
+	//device type pipe
+	getDeviceType(type) {
+        switch (type) {
+			case 0:
+				return 'Laptop';
+
+			case 1:
+				return 'Smartphone';
+
+			case 2:
+				return 'Smartwatch';
+
+			case 3:
+				return 'Tablet';
+
+			default:
+				return 'Error';
+        }
+	}
+
 }
 
 export const services = new Services();
+
+
