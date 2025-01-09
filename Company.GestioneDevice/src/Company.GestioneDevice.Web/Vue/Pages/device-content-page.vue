@@ -31,7 +31,7 @@
                         <v-list-item-title>Assign User</v-list-item-title>
                     </v-list-item>
                     <v-list-item class="listItem">
-                        <v-list-item-title>Update Device Software</v-list-item-title>
+                        <v-list-item-title @click="showUpdateDeviceDialog = true">Update Device Software</v-list-item-title>
                     </v-list-item>
                     <v-list-item class="listItem">
                         <v-list-item-title @click="getDeviceGeolocalization">Find Device</v-list-item-title>
@@ -66,7 +66,7 @@
                             <v-col cols="6" class="d-flex flex-column">
                                 <div class="text-h5 font-weight-bold">Software Version</div>
                                 <div class="text-h5 opacity-80">
-                                    {{deviceDetail.lastSoftwareVersion.name}}
+                                    {{deviceDetail.lastSoftwareVersion.name}}  {{deviceDetail.lastSoftwareVersion.version}}
                                 </div>
                             </v-col>
                             <v-col cols="6" class="d-flex flex-column">
@@ -125,13 +125,12 @@
 
 
         <!--    === Dialogs ===   -->
-
-<!--    Geolocalization   -->
+        <!--    Geolocalization   -->
         <v-dialog min-width="350" max-width="400"
                   :modelValue="showGeolocalizationDialog"
                   persistent>
             <v-card prepend-icon="mdi-map-marker" title="Your Device is Here">
-               
+
                 <v-card-text>
                     latitude: {{geolocalization.latitude}}, longitude: {{geolocalization.longitude}}
                 </v-card-text>
@@ -146,8 +145,63 @@
             </v-card>
         </v-dialog>
 
+        <!--    Update Software Version-->
+        <v-dialog min-width="500" max-width="400"
+                  :modelValue="showUpdateDeviceDialog"
+                  persistent>
+            <v-card prepend-icon="mdi-update" title="Update Software Device">
+
+                <v-card-text>
+                    <v-form v-model="updateSoftwareFormValid" ref="updateSoftwareForm">
+                        <v-container>
+                            <v-row>
+                                <v-col cols="6">
+                                    <v-text-field v-model="newSoftwareVersion.name"
+                                                  :counter="30"
+                                                  label="Software Name"
+                                                  :rules="[v => !!v || 'Name is required']"
+                                                  variant="solo"
+                                                  @input="validateUpdateSoftwareForm"
+                                                  required>
+                                    </v-text-field>
+                                </v-col>
+
+                                <v-col cols="6">
+                                    <v-text-field v-model="newSoftwareVersion.version"
+                                                  :counter="3"
+                                                  label="Sofware Version"
+                                                  :rules="[v => !!v || 'Version is required']"
+                                                  variant="solo"
+                                                  @input="validateUpdateSoftwareForm"
+                                                  required>
+                                    </v-text-field>
+                                </v-col>
 
 
+                            </v-row>
+                        </v-container>
+                    </v-form>
+                </v-card-text>
+
+
+                <template v-slot:actions>
+                    <v-spacer></v-spacer>
+
+                    <v-btn @click="onUpdateSoftareDeviceDialogClose(false)">
+                        Cancel
+                    </v-btn>
+
+                    <v-btn @click="onUpdateSoftareDeviceDialogClose(true)" :disabled="!updateSoftwareFormValid">
+                        Update
+                    </v-btn>
+                </template>
+            </v-card>
+        </v-dialog>
+
+
+
+        <!--    === Snackbar ===   -->
+        <snackbar :option="snackbarOpt"></snackbar>
 
     </v-container>
 </template>
@@ -175,6 +229,10 @@
                     latitude: 0,
                     longitude: 0
                 },
+                newSoftwareVersion: {
+                    name: "",
+                    version: ""
+                },
 
 
 
@@ -185,12 +243,19 @@
 
                 //dialog property
                 showEditDialog: false,
-                showGeolocalizationDialog:false,
-               
+                showGeolocalizationDialog: false,
+                showUpdateDeviceDialog: false,
 
-                //menu properties
+                //form properties
+                updateSoftwareFormValid: false,
 
-
+                //snackbar
+                snackbarOpt: {
+                    snackbar: false,
+                    text: '',
+                    timeout: 2500,
+                    color: ''
+                }
 
 
             };
@@ -289,10 +354,52 @@
 
 
             //    === dialog methods
+            onUpdateSoftareDeviceDialogClose(state) {
+                let that = this;
+                console.log("onUpdateDeviceDialogClose, state: ", state);
+
+                //close the dialog
+                that.showUpdateDeviceDialog = false;
+
+                //cancel update
+                if (state === false) return;
+
+
+                //prepare data
+                let data = {
+                    deviceId: that.deviceDetail.id,
+                    newSoftwareVersion: {
+                        name: that.newSoftwareVersion.name,
+                        version: that.newSoftwareVersion.version
+                    }
+                }
+
+                //update
+                console.log("data", data);
+
+                services.ApiCallerDevices
+                    .updateSoftareDevice(data).then(res => {
+                        console.log("On onUpdateSoftareDeviceDialogClose, res: ", res.data);
+                        that.deviceDetail.lastSoftwareVersion = res.data;
+
+                        //launch snackbar
+                        that.snackbarOpt = {
+                            snackbar: true,
+                            text: 'Device software updated successfully!',
+                            timeout: 2500,
+                            color: 'green'
+                        }
+                    });
+            },
 
 
 
 
+            //forms Methods
+            validateUpdateSoftwareForm() {
+                this.$refs.updateSoftwareForm.validate();
+                // console.log("validateUpdateSoftwareForm", this.updateSoftwareFormValid)
+            },
 
 
 

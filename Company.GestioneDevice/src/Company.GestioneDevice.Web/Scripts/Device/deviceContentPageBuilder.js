@@ -19,7 +19,7 @@ import darkTheme from "../../Styles/darkTheme.js";
 //component imports
 import leftMenu from "../../Vue/Components/left-menu.vue";
 import deviceContentPage from "../../Vue/Pages/device-content-page.vue";
-
+import snackbar from "../../Vue/Components/snackbar.vue";
 
 const app = createApp();
 
@@ -53,4 +53,5 @@ app.use(vuetify);
 app.use(pinia);
 app.component("left-menu", leftMenu);
 app.component("device-content-page", deviceContentPage);
+app.component("snackbar", snackbar);
 app.mount("#myApp");

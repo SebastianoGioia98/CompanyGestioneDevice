@@ -25,15 +25,32 @@ export default class ApiCallerHelper {
 
     callDelete(urlToCall) {
         return new Promise((resolve, reject) => {
-            console.log('Chiamata DELETE a:', urlToCall);
+           // console.log('Chiamata DELETE a:', urlToCall);
 
             axios.delete(urlToCall)
                 .then(result => {
-                    console.log('Risultato:', result);
+                    //console.log('Risultato:', result);
                     return resolve(result);
                 })
                 .catch(err => {
-                    console.error('Risultato:', err.response || err);
+                    //console.error('Risultato:', err.response || err);
+                    return reject(err);
+                });
+        });
+    }
+
+
+    callPost(urlToCall, data) {
+        return new Promise((resolve, reject) => {
+           // console.log('Chiamata POST a:', urlToCall, 'con dati:', data);
+
+            axios.post(urlToCall, data)
+                .then(result => {
+                    //console.log('Risultato:', result);
+                    return resolve(result);
+                })
+                .catch(err => {
+                    //console.error('Errore:', err.response || err);
                     return reject(err);
                 });
         });

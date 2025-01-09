@@ -30,5 +30,11 @@
 	}
 
 
+	updateSoftareDevice(data) {
+		const urlToCall = this.url + `update-device-software`;
+		return this.restFulApiCallerHelper.callPost(urlToCall, data);
+	}
+
+
 
 }
