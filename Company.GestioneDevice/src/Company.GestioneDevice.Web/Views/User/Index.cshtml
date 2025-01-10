@@ -1,0 +1,38 @@
+﻿@using Volo.Abp.Users
+@using Newtonsoft.Json
+@using Company.GestioneDevice.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@{
+    ViewData["Title"] = "Users";
+
+}
+
+@if (false)
+{
+    <v-card elevation="0" style="height:100%; width:100%">
+        <v-row align="center"
+               justify="center"
+               style="height:100%; width:100%">
+            <v-col cols="12" align="center">
+                <a href="~/Account/Login" style="text-decoration:none;">
+                    <v-btn variant="outlined" size="x-large">
+                        Login
+                    </v-btn>
+                </a>
+                <p>TEMP PSWD: 1q2w3E*</p>
+            </v-col>
+        </v-row>
+    </v-card>
+}
+else
+{
+    //string currentUserJson = JsonConvert.SerializeObject(CurrentUser);
+    <user-page></user-page>
+}
+
+
+@section bodyScripts
+{
+    <script src="~/js/userIndex.js" asp-append-version="true"></script>
+}
