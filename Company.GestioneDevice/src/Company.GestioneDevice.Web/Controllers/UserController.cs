@@ -13,10 +13,10 @@ public class UserController : Controller
 
 
 
-    //[Route("user/{userId}")]
-    //public IActionResult Content(Guid deviceId)
-    //{
-    //    ViewBag.DeviceId = deviceId;
-    //    return View();
-    //}
+    [Route("users/{userId}")]
+    public IActionResult Content(Guid userId)
+    {
+        ViewBag.UserId = userId;
+        return View();
+    }
 }

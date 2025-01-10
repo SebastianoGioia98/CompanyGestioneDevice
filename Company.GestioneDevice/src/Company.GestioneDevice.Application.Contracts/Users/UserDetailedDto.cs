@@ -14,4 +14,6 @@ public class UserDetailedDto : UserDto
 
     [Required]
     public List<PolicyDto> Policies { get; set; } = new List<PolicyDto>();
+
+    public DateTime CreationTime { get; set; }
 }

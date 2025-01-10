@@ -16,4 +16,10 @@
 		const urlToCall = this.url + id;
 		return this.restFulApiCallerHelper.callDelete(urlToCall);
 	}
+
+
+	getUserDetails(id) {
+		const urlToCall = this.url + `user-by-id/` + id;
+		return this.restFulApiCallerHelper.callGet(urlToCall);
+	}
 }
