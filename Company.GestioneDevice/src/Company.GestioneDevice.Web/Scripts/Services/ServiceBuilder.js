@@ -1,6 +1,6 @@
 ﻿import ApiCallerHelper from "./apiCallerHelper.js";
 import ApiCallerDevices from "./API/apiCallerDevices.js";
-
+import ApiCallerUsers	from "./API/apiCallerUsers.js";
 
 export default class Services {
 
@@ -18,7 +18,9 @@ export default class Services {
 		return new ApiCallerDevices(this.apiCallerHelper);
 	}
 
-
+	get ApiCallerUsers() {
+		return new ApiCallerUsers(this.apiCallerHelper);
+	}
 
 	//    === OTHER METHODS ===
 	getDialogWidthVuetify(breakpoint) {
