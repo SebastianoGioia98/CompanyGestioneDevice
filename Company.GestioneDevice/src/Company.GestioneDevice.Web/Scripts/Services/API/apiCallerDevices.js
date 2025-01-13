@@ -46,4 +46,9 @@
 		const urlToCall = this.url + `device-with-details`;
 		return this.restFulApiCallerHelper.callPut(urlToCall, data);
 	}
+
+	assignUser(data) {
+		const urlToCall = this.url + `assign-user-device`;
+		return this.restFulApiCallerHelper.callPut(urlToCall, data);
+	}
 }

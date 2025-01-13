@@ -28,7 +28,7 @@
                         <v-list-item-title @click="onBtnEditDeviceClick">Edit Device</v-list-item-title>
                     </v-list-item>
                     <v-list-item class="listItem">
-                        <v-list-item-title>Assign User</v-list-item-title>
+                        <v-list-item-title @click="showAssignUserDialog = true">Assign User</v-list-item-title>
                     </v-list-item>
                     <v-list-item class="listItem">
                         <v-list-item-title @click="showUpdateDeviceDialog = true">Update Device Software</v-list-item-title>
@@ -198,7 +198,51 @@
             </v-card>
         </v-dialog>
 
+        <!--    Edit Device-->
         <dialog-edit-device v-model="showEditDialog" :featureList="featureList" :device="editDeviceInfo" @close="onDialogEditClose"></dialog-edit-device>
+
+
+        <!--    Assign user-->
+        <v-dialog min-width="500" max-width="400"
+                  :modelValue="showAssignUserDialog"
+                  persistent>
+            <v-card prepend-icon="mdi-pensile" title="Assign User to Device">
+
+                <v-card-text>
+                    <v-form v-model="assignUserFormValid" ref="assignUserForm">
+                        <v-container>
+                            <v-row>
+                                <v-col cols="12">
+                                    <!--User-->
+                                    <v-select label="User"
+                                              v-model="assignedUser"
+                                              item-title="username" item-value="id"
+                                              :items="userList"
+                                              :rules="[v => !!v || 'User is required']"
+                                              @blur="validateAssignUserForm"
+                                              variant="solo-filled">
+                                    </v-select>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-form>
+                </v-card-text>
+
+
+                <template v-slot:actions>
+                    <v-spacer></v-spacer>
+
+                    <v-btn @click="onAssignUserDialogClose(false)">
+                        Cancel
+                    </v-btn>
+
+                    <v-btn @click="onAssignUserDialogClose(true)" :disabled="!assignUserFormValid">
+                        Assign User
+                    </v-btn>
+                </template>
+            </v-card>
+        </v-dialog>
+
 
         <!--    === Snackbar ===   -->
         <snackbar :option="snackbarOpt"></snackbar>
@@ -225,6 +269,7 @@
             return {
                 deviceList: [],
                 featureList: [],
+                userList:[],
                 deviceDetail: null,
 
                 //features property
@@ -237,7 +282,7 @@
                     version: ""
                 },
                 editDeviceInfo: {},
-
+                assignedUser:null,
 
                 //state property
                 loadingState: false,
@@ -248,9 +293,11 @@
                 showEditDialog: false,
                 showGeolocalizationDialog: false,
                 showUpdateDeviceDialog: false,
+                showAssignUserDialog:false,
 
                 //form properties
                 updateSoftwareFormValid: false,
+                assignUserFormValid: false,
 
                 //snackbar
                 snackbarOpt: {
@@ -281,6 +328,17 @@
                     that.featureList = res.data.items;
 
                     console.log("featureList : ", that.featureList);
+                });
+
+
+            //get userList
+            services.ApiCallerUsers
+                .getUsers().then(res => {
+                    //load featureList
+                    that.userList = res.data.items;
+
+                    console.log("userList : ", that.userList);
+
                 });
         },
         mounted() {
@@ -475,6 +533,69 @@
                 
             },
 
+            onAssignUserDialogClose(state) {
+                let that = this;
+                console.log("onAssignUserDialogClose, state: ", state);
+
+                //close the dialog
+                that.showAssignUserDialog = false;
+
+                //cancel update
+                if (state === false) return;
+
+
+                //prepare data
+                let data = {
+                    deviceId: that.deviceDetail.id,
+                    userId: that.assignedUser
+                }
+
+
+                let snackOpt = {};
+
+
+                //SET Loading State
+                that.loadingState = true;
+
+                //call to  addDevice
+                services.ApiCallerDevices
+                    .assignUser(data)
+                    .then((res) => {
+                        console.log("on ApiCallerDevices.assignUser, res", res);
+
+                        //preparo il messaggio per lo snackbar
+                        snackOpt = {
+                            snackbar: true,
+                            text: 'User Assigned successfully!',
+                            timeout: 2500,
+                            color: 'green'
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("on ApiCallerDevices.assignUser, err", err);
+
+                        //preparo il messaggio per lo snackbar
+                        snackOpt = {
+                            snackbar: true,
+                            text: 'Something got wrong. Please retry later',
+                            timeout: 2500,
+                            color: 'red'
+                        }
+                    })
+                    .finally(() => {
+                        //UNSET Loading State
+                        that.loading = false;
+
+                        //chiedo la lista dei device e riempio la deviceList
+                        that.refeshDeviceList();
+
+                        //preparo il messaggio per lo snackbar
+                        that.snackbarOpt = snackOpt;
+                    });
+            },
+
+
+
 
             //forms Methods
             validateUpdateSoftwareForm() {
@@ -482,7 +603,10 @@
                 // console.log("validateUpdateSoftwareForm", this.updateSoftwareFormValid)
             },
 
-
+            validateAssignUserForm() {
+                this.$refs.assignUserForm.validate();
+                // console.log("validateAssignUserForm", this.updateSoftwareFormValid)
+            },
 
             //    === other mothods
             getDate(dateString) {

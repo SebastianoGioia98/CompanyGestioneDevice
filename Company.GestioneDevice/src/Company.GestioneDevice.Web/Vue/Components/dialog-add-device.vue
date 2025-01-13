@@ -56,7 +56,7 @@
                                           item-title="username" item-value="id"
                                           :items="userList"
                                           :rules="[v => !!v || 'User is required']"
-                                          @input="validateAddDeviceForm"
+                                          @blur="validateAddDeviceForm"
                                           variant="solo-filled">
                                 </v-select>
                             </v-col>
