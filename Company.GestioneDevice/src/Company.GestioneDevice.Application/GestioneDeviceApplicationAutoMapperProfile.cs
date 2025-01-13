@@ -53,7 +53,8 @@ public class GestioneDeviceApplicationAutoMapperProfile : Profile
         CreateMap<Feature, FeatureDto>()
            .ReverseMap();
 
-
+        CreateMap<Feature, FeatureDtoOther>()
+           .ReverseMap();
 
 
         CreateMap<SoftwareVersion, SoftwareVersionDto>()
