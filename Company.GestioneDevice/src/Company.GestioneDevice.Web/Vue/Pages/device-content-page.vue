@@ -25,7 +25,7 @@
             <v-menu activator="#menu-activator">
                 <v-list lines="two">
                     <v-list-item class="listItem">
-                        <v-list-item-title @click="onClick">Edit Device</v-list-item-title>
+                        <v-list-item-title @click="onBtnEditDeviceClick">Edit Device</v-list-item-title>
                     </v-list-item>
                     <v-list-item class="listItem">
                         <v-list-item-title>Assign User</v-list-item-title>
@@ -198,7 +198,7 @@
             </v-card>
         </v-dialog>
 
-
+        <dialog-edit-device v-model="showEditDialog" :featureList="featureList" :device="editDeviceInfo" @close="onDialogEditClose"></dialog-edit-device>
 
         <!--    === Snackbar ===   -->
         <snackbar :option="snackbarOpt"></snackbar>
@@ -224,7 +224,10 @@
             const theme = useTheme();
             return {
                 deviceList: [],
+                featureList: [],
                 deviceDetail: null,
+
+                //features property
                 geolocalization: {
                     latitude: 0,
                     longitude: 0
@@ -233,7 +236,7 @@
                     name: "",
                     version: ""
                 },
-
+                editDeviceInfo: {},
 
 
                 //state property
@@ -270,6 +273,15 @@
             let that = this;
             //chiedo la lista dei device e riempio la deviceList
             that.refeshDeviceList();
+
+            //get featureList
+            services.ApiCallerFeatures
+                .getFeatureList().then(res => {
+                    //load featureList
+                    that.featureList = res.data.items;
+
+                    console.log("featureList : ", that.featureList);
+                });
         },
         mounted() {
             let that = this;
@@ -330,16 +342,33 @@
 
 
             //   === btn methods
+            onBtnEditDeviceClick() {
+                let that = this;
 
+                const filteredFeatures = that.featureList
+                    .filter(feature => {
+                        const match = that.deviceDetail.features.some(f => f.name === feature.name);
+                        console.log('Checking feature:', feature.name, 'Match:', match);
+                        return match;
+                    })
+                    .map(feature => feature.id);
+
+                that.editDeviceInfo = {
+                    id: that.deviceDetail.id,
+                    name: that.deviceDetail.name,
+                    type: that.deviceDetail.type,
+                    model: that.deviceDetail.model,
+                    deviceFeaturesIds: filteredFeatures
+                }
+
+                //console.log("on onBtnEditDeviceClick, device: ", filteredFeatures)
+                that.showEditDialog = true;
+            },
 
 
 
 
             //    === menu methods
-            onClick() {
-                console.log("CLICKED")
-            },
-
             getDeviceGeolocalization() {
                 let that = this;
                 services.ApiCallerDevices
@@ -392,7 +421,59 @@
                     });
             },
 
+            onDialogEditClose(e) {
+                let that = this;
+                console.log("onDialogEditClose, res: ", e);
 
+                that.showEditDialog = false;
+
+
+                if (e.state === false) return;
+
+                let snackOpt = {};
+
+
+                //SET Loading State
+                that.loadingState = true;
+
+                //call to  addDevice
+                services.ApiCallerDevices
+                    .editDevice(e.data)
+                    .then((res) => {
+                        console.log("on ApiCallerDevices.createDevice, res", res);
+
+                        //preparo il messaggio per lo snackbar
+                        snackOpt = {
+                            snackbar: true,
+                            text: 'Device created successfully!',
+                            timeout: 2500,
+                            color: 'green'
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("on ApiCallerDevices.createDevice, err", err);
+
+                        //preparo il messaggio per lo snackbar
+                        snackOpt = {
+                            snackbar: true,
+                            text: 'Something got wrong. Please retry later',
+                            timeout: 2500,
+                            color: 'red'
+                        }
+                    })
+                    .finally(() => {
+                        //UNSET Loading State
+                        that.loading = false;
+
+                        //chiedo la lista dei device e riempio la deviceList
+                        that.refeshDeviceList();
+
+                        //preparo il messaggio per lo snackbar
+                        that.snackbarOpt = snackOpt;
+                    });
+
+                
+            },
 
 
             //forms Methods

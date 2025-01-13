@@ -41,4 +41,9 @@
 		const urlToCall = this.url + `device-with-details`;
 		return this.restFulApiCallerHelper.callPost(urlToCall, data);
 	}
+
+	editDevice(data) {
+		const urlToCall = this.url + `device-with-details`;
+		return this.restFulApiCallerHelper.callPut(urlToCall, data);
+	}
 }

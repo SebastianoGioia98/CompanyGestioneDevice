@@ -56,4 +56,21 @@ export default class ApiCallerHelper {
         });
     }
 
+
+    callPut(urlToCall, data) {
+        return new Promise((resolve, reject) => {
+            // console.log('Chiamata POST a:', urlToCall, 'con dati:', data);
+
+            axios.put(urlToCall, data)
+                .then(result => {
+                    //console.log('Risultato:', result);
+                    return resolve(result);
+                })
+                .catch(err => {
+                    //console.error('Errore:', err.response || err);
+                    return reject(err);
+                });
+        });
+    }
+
 }

@@ -20,6 +20,7 @@ import darkTheme from "../../Styles/darkTheme.js";
 import leftMenu from "../../Vue/Components/left-menu.vue";
 import deviceContentPage from "../../Vue/Pages/device-content-page.vue";
 import snackbar from "../../Vue/Components/snackbar.vue";
+import dialogEditDevice from "../../Vue/Components/dialog-edit-device.vue";
 
 const app = createApp();
 
@@ -54,4 +55,5 @@ app.use(pinia);
 app.component("left-menu", leftMenu);
 app.component("device-content-page", deviceContentPage);
 app.component("snackbar", snackbar);
+app.component("dialog-edit-device", dialogEditDevice);
 app.mount("#myApp");
