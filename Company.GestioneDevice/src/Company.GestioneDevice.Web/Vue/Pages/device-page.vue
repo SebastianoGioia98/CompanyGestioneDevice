@@ -58,53 +58,58 @@
 
 
 
-            <!--    === Table Section ===   -->
-            <v-row no-gutters class="d-flex flex-column h-100">
-                <v-card class="elevation-0 w-100  flex-grow-1 d-flex flex-column" rounded="lg" color="transparent">
-                    <v-data-table-server v-model:items-per-page="itemsPerPage"
-                                         :headers="headers"
-                                         :items-length="totalItems"
-                                         :items="deviceList"
-                                         style="height: 100% !important"
-                                         :loading="loading"
-                                         loading-text="Loading, please wait..."
-                                         class="elevation-0 dataTable"
-                                         height="100%" width="100%"
-                                         @click:row="openContent"
-                                         @update:options="refeshDeviceList" color="surface1"
-                                         :items-per-page-options="paginatorOptions">
+        <!--    === Table Section ===   -->
+        <v-row no-gutters class="d-flex flex-column h-100">
+            <v-card class="elevation-0 w-100  flex-grow-1 d-flex flex-column" rounded="lg" color="transparent">
+                <v-data-table-server v-model:items-per-page="itemsPerPage"
+                                     :headers="headers"
+                                     :items-length="totalItems"
+                                     :items="deviceList"
+                                     style="height: 100% !important"
+                                     :loading="loading"
+                                     loading-text="Loading, please wait..."
+                                     class="elevation-0 dataTable"
+                                     height="100%" width="100%"
+                                     @click:row="openContent"
+                                     @update:options="refeshDeviceList" color="surface1"
+                                     :items-per-page-options="paginatorOptions">
 
 
-                        <template v-slot:item.type="{ item }">
-                            {{item.type}}
-                        </template>
+                    <template v-slot:item.type="{ item }">
+                        {{getDeviceType(item.type)}}
+                    </template>
 
-                        <template v-slot:item.creationTime="{ item }">
-                            {{ getDate(item.creationTime) }}
-                        </template>
+                    <template v-slot:item.creationTime="{ item }">
+                        {{ getDate(item.creationTime) }}
+                    </template>
 
-                        <template v-slot:item.actions="{ item }">
-                            <v-tooltip text="Delete Device" location="bottom">
-                                <template v-slot:activator="{ props }">
-                                    <v-btn icon="mdi-delete"
-                                           size="x-small"
-                                           v-bind="props"
-                                           class=" ml-3"
-                                           @click.stop="onBtnDeleteClick(item)">
-                                    </v-btn>
-                                </template>
-                            </v-tooltip>
-                        </template>
-                    </v-data-table-server>
-                </v-card>
-            </v-row>
-
-
+                    <template v-slot:item.actions="{ item }">
+                        <v-tooltip text="Delete Device" location="bottom">
+                            <template v-slot:activator="{ props }">
+                                <v-btn icon="mdi-delete"
+                                       size="x-small"
+                                       v-bind="props"
+                                       class=" ml-3"
+                                       @click.stop="onBtnDeleteClick(item)">
+                                </v-btn>
+                            </template>
+                        </v-tooltip>
+                    </template>
+                </v-data-table-server>
+            </v-card>
+        </v-row>
 
 
-            <!--    === Dialogs ===   -->
-            <dialog-delete v-model="showDeleteDialog" :item="selectedDevice" @close="onDialogDeleteClose"></dialog-delete>
-            <dialog-add v-model="showAddDialog" @close="onDialogAddClose"></dialog-add>
+
+
+        <!--    === Dialogs ===   -->
+        <dialog-delete v-model="showDeleteDialog" :item="selectedDevice" @close="onDialogDeleteClose"></dialog-delete>
+        <dialog-add-device v-model="showAddDialog" :featureList="featureList" :userList="userList" @close="onDialogAddClose"></dialog-add-device>
+
+
+
+        <!--    === Snackbar ===   -->
+        <snackbar :option="snackbarOpt"></snackbar>
 
     </v-container>
 </template>
@@ -123,6 +128,8 @@
             const theme = useTheme();
             return {
                 deviceList: [],
+                featureList: [],
+                userList: [],
 
                 //state property
                 loadingState: false,
@@ -189,6 +196,14 @@
                     { value: 50, title: '50' },
                     { value: 100, title: '100' }
                 ],
+
+                //snackbar
+                snackbarOpt: {
+                    snackbar: false,
+                    text: '',
+                    timeout: 2500,
+                    color: ''
+                }
             };
         },
         props: {
@@ -199,9 +214,28 @@
         },
         created() {
             let that = this;
-
+            console.log("on devicePage Created");
             //chiedo la lista dei device e riempio la deviceList
-           // that.refeshDeviceList();
+            // that.refeshDeviceList();
+
+            //get featureList
+            services.ApiCallerFeatures
+                .getFeatureList().then(res => {
+                    //load featureList
+                    that.featureList = res.data.items;
+                    
+                    console.log("featureList : ", that.featureList);
+                });
+
+            //get userList
+            services.ApiCallerUsers
+                .getUsers().then(res => {
+                    //load featureList
+                    that.userList = res.data.items;
+
+                    console.log("userList : ", that.userList);
+
+                });
         },
         methods: {
 
@@ -279,8 +313,7 @@
                 if (e.state === false) return;
 
 
-
-
+                let snackOpt = {};
 
                 //SET Loading State
                 that.loadingState = true;
@@ -292,11 +325,23 @@
                         console.log("on ApiCallerDevices.deleteDevice, res", res);
 
                         //preparo il messaggio per lo snackbar
+                        snackOpt = {
+                            snackbar: true,
+                            text: 'Device deleted successfully!',
+                            timeout: 2500,
+                            color: 'green'
+                        }
                     })
                     .catch((err) => {
                         console.log("on ApiCallerDevices.deleteDevice, err", err);
 
                         //preparo il messaggio per lo snackbar
+                        snackOpt = {
+                            snackbar: true,
+                            text: 'Something got wrong. Please retry later',
+                            timeout: 2500,
+                            color: 'red'
+                        }
                     })
                     .finally(() => {
                         //UNSET Loading State
@@ -304,6 +349,11 @@
 
                         //chiedo la lista dei device e riempio la deviceList
                         that.refeshDeviceList();
+
+
+                        //lancio la snackbar
+                        that.snackbarOpt = snackOpt;
+                 
                     });
             },
 
@@ -315,12 +365,58 @@
 
 
                 if (e.state === false) return;
+
+                let snackOpt = {};
+
+                //SET Loading State
+                that.loadingState = true;
+
+                //call to  addDevice
+                services.ApiCallerDevices
+                    .createDevice(e.data)
+                    .then((res) => {
+                        console.log("on ApiCallerDevices.createDevice, res", res);
+
+                        //preparo il messaggio per lo snackbar
+                        snackOpt = {
+                            snackbar: true,
+                            text: 'Device created successfully!',
+                            timeout: 2500,
+                            color: 'green'
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("on ApiCallerDevices.createDevice, err", err);
+
+                        //preparo il messaggio per lo snackbar
+                        snackOpt = {
+                            snackbar: true,
+                            text: 'Something got wrong. Please retry later',
+                            timeout: 2500,
+                            color: 'red'
+                        }
+                    })
+                    .finally(() => {
+                        //UNSET Loading State
+                        that.loading = false;
+
+                        //chiedo la lista dei device e riempio la deviceList
+                        that.refeshDeviceList();
+
+                        //preparo il messaggio per lo snackbar
+                        that.snackbarOpt = snackOpt;
+                    });
             },
 
             //    === other mothods
             getDate(dateString) {
                 return services.formatDateTime(dateString);
             },
+
+
+            getDeviceType(type) {
+                return services.getDeviceType(type);
+            }
         },
 
     };

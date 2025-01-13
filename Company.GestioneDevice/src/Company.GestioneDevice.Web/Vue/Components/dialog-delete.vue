@@ -46,7 +46,7 @@
             let that = this;
 
             //log di item
-            console.log("On delete-dialog created, item is: ", that.item);
+            //console.log("On delete-dialog created, item is: ", that.item);
         },
         methods: {
             onClick(btnState) {

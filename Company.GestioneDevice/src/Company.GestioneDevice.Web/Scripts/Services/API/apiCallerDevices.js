@@ -1,4 +1,4 @@
-﻿export default class ApiCallerProjects {
+﻿export default class ApiCallerDevices {
 
 	url = `https://localhost:44357/api/app/device/`;
 
@@ -6,6 +6,7 @@
 	constructor(helper) {
 		this.restFulApiCallerHelper = helper;
 	}
+
 
 	getDevices() {
 		const urlToCall = this.url + `device-list`;
@@ -36,5 +37,8 @@
 	}
 
 
-
+	createDevice(data) {
+		const urlToCall = this.url + `device-with-details`;
+		return this.restFulApiCallerHelper.callPost(urlToCall, data);
+	}
 }

@@ -1,7 +1,7 @@
 ﻿import ApiCallerHelper from "./apiCallerHelper.js";
 import ApiCallerDevices from "./API/apiCallerDevices.js";
 import ApiCallerUsers	from "./API/apiCallerUsers.js";
-
+import ApiCallerFeatures from "./API/apiCallerFeatures.js";
 export default class Services {
 
 	constructor() {
@@ -20,6 +20,10 @@ export default class Services {
 
 	get ApiCallerUsers() {
 		return new ApiCallerUsers(this.apiCallerHelper);
+	}
+
+	get ApiCallerFeatures() {
+		return new ApiCallerFeatures(this.apiCallerHelper);
 	}
 
 	//    === OTHER METHODS ===
