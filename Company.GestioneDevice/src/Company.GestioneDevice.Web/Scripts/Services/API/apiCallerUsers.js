@@ -1,4 +1,4 @@
-﻿export default class ApiCallerProjects {
+﻿export default class ApiCallerUsers {
 
 	url = `https://localhost:44357/api/app/utente/`;
 
