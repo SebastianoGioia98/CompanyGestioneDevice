@@ -22,4 +22,11 @@
 		const urlToCall = this.url + `user-by-id/` + id;
 		return this.restFulApiCallerHelper.callGet(urlToCall);
 	}
+
+
+	createUser(data) {
+		const urlToCall = this.url + `user-with-details`;
+		return this.restFulApiCallerHelper.callPost(urlToCall, data);
+	}
+
 }

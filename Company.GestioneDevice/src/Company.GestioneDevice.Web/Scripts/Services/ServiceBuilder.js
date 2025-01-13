@@ -2,6 +2,8 @@
 import ApiCallerDevices from "./API/apiCallerDevices.js";
 import ApiCallerUsers	from "./API/apiCallerUsers.js";
 import ApiCallerFeatures from "./API/apiCallerFeatures.js";
+import ApiCallerPolicies from "./API/apiCallerPolicies.js";
+
 export default class Services {
 
 	constructor() {
@@ -25,6 +27,11 @@ export default class Services {
 	get ApiCallerFeatures() {
 		return new ApiCallerFeatures(this.apiCallerHelper);
 	}
+
+	get ApiCallerPolicies() {
+		return new ApiCallerPolicies(this.apiCallerHelper);
+	}
+
 
 	//    === OTHER METHODS ===
 	getDialogWidthVuetify(breakpoint) {

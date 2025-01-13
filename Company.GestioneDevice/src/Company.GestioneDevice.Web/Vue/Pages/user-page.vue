@@ -101,7 +101,7 @@
 
         <!--    === Dialogs ===   -->
         <dialog-delete v-model="showDeleteDialog" :item="selectedUser" @close="onDialogDeleteClose"></dialog-delete>
-        <dialog-add v-model="showAddDialog" @close="onDialogAddClose"></dialog-add>
+        <dialog-add-user v-model="showAddDialog" :policyList="policyList" @close="onDialogAddClose"></dialog-add-user>
 
 
         <!--    === Snackbar ===   -->
@@ -124,6 +124,8 @@
             const theme = useTheme();
             return {
                 userList: [],
+                policyList: [],
+
 
                 //state property
                 loadingState: false,
@@ -215,7 +217,17 @@
             let that = this;
 
             //chiedo la lista dei device e riempio la userList
-           // that.refeshuserList();
+            // that.refeshuserList();
+
+            //get policyList
+            services.ApiCallerPolicies
+                .getPolicyList().then(res => {
+                    //load featureList
+                    that.policyList = res.data.items;
+
+                    console.log("userList : ", that.policyList);
+
+                });
         },
         methods: {
 
@@ -340,6 +352,50 @@
 
 
                 if (e.state === false) return;
+
+                let snackOpt = {};
+
+                //SET Loading State
+                that.loadingState = true;
+
+                //call to  addDevice
+                services.ApiCallerUsers
+                    .createUser(e.data)
+                    .then((res) => {
+                        console.log("on ApiCallerDevices.createUser, res", res);
+
+                        //preparo il messaggio per lo snackbar
+                        snackOpt = {
+                            snackbar: true,
+                            text: 'User created successfully!',
+                            timeout: 2500,
+                            color: 'green'
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("on ApiCallerDevices.createUser, err", err);
+
+                        //preparo il messaggio per lo snackbar
+                        snackOpt = {
+                            snackbar: true,
+                            text: 'Something got wrong. Please retry later',
+                            timeout: 2500,
+                            color: 'red'
+                        }
+                    })
+                    .finally(() => {
+                        //UNSET Loading State
+                        that.loading = false;
+
+                        //chiedo la lista dei device e riempio la deviceList
+                        that.refeshUserList();
+
+                        //preparo il messaggio per lo snackbar
+                        that.snackbarOpt = snackOpt;
+                    });
+
+
+
             },
 
             //    === other mothods

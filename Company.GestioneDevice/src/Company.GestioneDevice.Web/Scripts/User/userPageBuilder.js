@@ -21,7 +21,7 @@ import leftMenu from "../../Vue/Components/left-menu.vue";
 import userPage from "../../Vue/Pages/user-page.vue";
 import snackbar from "../../Vue/Components/snackbar.vue";
 import dialogDelete from "../../Vue/Components/dialog-delete.vue";
-import dialogAdd from "../../Vue/Components/dialog-add.vue";
+import dialogAddUser from "../../Vue/Components/dialog-add-user.vue";
 
 const app = createApp();
 
@@ -57,5 +57,5 @@ app.component("left-menu", leftMenu);
 app.component("user-page", userPage);
 app.component("snackbar", snackbar);
 app.component("dialog-delete", dialogDelete);
-app.component("dialog-add", dialogAdd);
+app.component("dialog-add-user", dialogAddUser);
 app.mount("#myApp");
