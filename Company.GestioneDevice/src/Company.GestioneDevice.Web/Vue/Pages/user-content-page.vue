@@ -113,11 +113,14 @@
 
 
         <!--    === Dialogs ===   -->
+        <!--    Edit Device-->
+        <dialog-edit-user v-model="showEditDialog"  :user="userDetail" @close="onDialogEditClose"></dialog-edit-user>
+        
         <!--    Assign User Policies-->
         <v-dialog min-width="500" max-width="400"
                   :modelValue="showAssignUserPoliciesDialog"
                   persistent>
-            <v-card prepend-icon="mdi-account-plus" title="Assign User Policies">
+            <v-card prepend-icon="mdi-account-cog" title="Assign User Policies">
 
                 <v-card-text>
                     <v-form v-model="assignUserPolicieFormValid" ref="assignUserForm">
@@ -149,7 +152,7 @@
                         Cancel
                     </v-btn>
 
-                    <v-btn @click="onAssignUserPoliciesDialogClose(true)" >
+                    <v-btn @click="onAssignUserPoliciesDialogClose(true)">
                         Assign Policies
                     </v-btn>
                 </template>
@@ -376,7 +379,58 @@
                     });
             },
 
+            onDialogEditClose(e) {
+                let that = this;
+                console.log("onDialogEditClose, res: ", e);
 
+                that.showEditDialog = false;
+
+
+                if (e.state === false) return;
+
+                let snackOpt = {};
+
+
+                //SET Loading State
+                that.loadingState = true;
+
+                //call to  editUser
+                services.ApiCallerUsers
+                    .editUser(e.data)
+                    .then((res) => {
+                        console.log("on ApiCallerUsers.editUser, res", res);
+
+                        //preparo il messaggio per lo snackbar
+                        snackOpt = {
+                            snackbar: true,
+                            text: 'User edited successfully!',
+                            timeout: 2500,
+                            color: 'green'
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("on ApiCallerUsers.editUser, err", err);
+
+                        //preparo il messaggio per lo snackbar
+                        snackOpt = {
+                            snackbar: true,
+                            text: 'Something got wrong. Please retry later',
+                            timeout: 2500,
+                            color: 'red'
+                        }
+                    })
+                    .finally(() => {
+                        //UNSET Loading State
+                        that.loading = false;
+
+                        //chiedo la lista dei device e riempio la deviceList
+                        that.refeshUserList();
+
+                        //preparo il messaggio per lo snackbar
+                        that.snackbarOpt = snackOpt;
+                    });
+
+            },
 
 
 

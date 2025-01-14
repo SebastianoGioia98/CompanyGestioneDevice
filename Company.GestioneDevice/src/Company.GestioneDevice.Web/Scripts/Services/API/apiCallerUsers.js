@@ -35,4 +35,9 @@
 		return this.restFulApiCallerHelper.callPut(urlToCall, data);
 	}
 
+
+	editUser(data) {
+		const urlToCall = this.url + `user-with-details`;
+		return this.restFulApiCallerHelper.callPut(urlToCall, data);
+	}
 }
