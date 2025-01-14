@@ -50,6 +50,8 @@ using Volo.Abp.Security.Claims;
 using Volo.Abp.SettingManagement.Web;
 using Volo.Abp.Studio.Client.AspNetCore;
 using Volo.Abp.AspNetCore.Mvc.AntiForgery;
+using Company.GestioneDevice.Devices;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Company.GestioneDevice.Web;
 
@@ -137,6 +139,18 @@ public class GestioneDeviceWebModule : AbpModule
 
         ConfigureBundles();
         ConfigureUrls(configuration);
+
+        // Configura CORS
+        context.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowSpecificOrigins", policy =>
+            {
+                policy.WithOrigins("http://localhost:44357", "https://localhost:44357") // Aggiungi il dominio del tuo frontend
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+            });
+        });
+
         ConfigureAuthentication(context);
         ConfigureAutoMapper();
         ConfigureVirtualFileSystem(hostingEnvironment);
@@ -148,6 +162,22 @@ public class GestioneDeviceWebModule : AbpModule
         {
             options.IsDynamicPermissionStoreEnabled = true;
         });
+
+        Configure<AbpAspNetCoreMvcOptions>(options =>
+        {
+            options.ConventionalControllers.Create(typeof(DeviceAppService).Assembly, config =>
+            {
+                // Configura i controller convenzionali come richiesto
+                // Questa configurazione è generica e potrebbe essere personalizzata
+            });
+        });
+
+        // Disabilita Antiforgery globalmente
+        context.Services.AddMvc(options =>
+        {
+            options.Filters.Add(new IgnoreAntiforgeryTokenAttribute());
+        });
+
     }
 
 
@@ -264,6 +294,9 @@ public class GestioneDeviceWebModule : AbpModule
             app.UseErrorPage();
             app.UseHsts();
         }
+
+        // Middleware CORS
+        app.UseCors("AllowSpecificOrigins");
 
         app.UseCorrelationId();
         app.MapAbpStaticAssets();

@@ -1,6 +1,10 @@
 {
     "/js/site.js": "/js/site.js",
     "/js/homeIndex.js": "/js/homeIndex.js",
+    "/js/deviceIndex.js": "/js/deviceIndex.js",
+    "/js/deviceContent.js": "/js/deviceContent.js",
+    "/js/userIndex.js": "/js/userIndex.js",
+    "/js/userContent.js": "/js/userContent.js",
     "/css/site.css": "/css/site.css",
     "/js/commonModule.js": "/js/commonModule.js"
 }
