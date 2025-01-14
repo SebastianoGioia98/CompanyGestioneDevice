@@ -260,9 +260,6 @@
 
             },
 
-            openContent() {
-
-            },
 
             openContent(value, row) {
                 window.location.href = "users/" + row.item.id;

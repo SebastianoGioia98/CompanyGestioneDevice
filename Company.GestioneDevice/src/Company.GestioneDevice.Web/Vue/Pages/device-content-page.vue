@@ -6,10 +6,10 @@
         <v-row no-gutters class="align-center mb-5 flex-grow-0">
             <v-btn icon="mdi-arrow-left" @click="changePage('devices/')"
                    variant="text" size="small"
-                   class="mr-4">
+                   class="ml-auto mr-4">
             </v-btn>
 
-            <h1 class="pageTitle mr-10 ml-auto">Device</h1>
+            <h1 class="pageTitle mr-10 ">Device</h1>
 
             <v-select :items="deviceList" v-model="selectedDevice" @update:modelValue="changeDevice"
                       item-title="name" item-value="id"
