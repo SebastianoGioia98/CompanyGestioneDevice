@@ -29,4 +29,10 @@
 		return this.restFulApiCallerHelper.callPost(urlToCall, data);
 	}
 
+
+	assignUserPolicies(data) {
+		const urlToCall = this.url + `assign-user-policies`;
+		return this.restFulApiCallerHelper.callPut(urlToCall, data);
+	}
+
 }
