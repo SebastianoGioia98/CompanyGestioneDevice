@@ -8,7 +8,7 @@
         //grigio
         secondary: '#b4b4b4',
 
-
+        'on-primary': '#333333',
 
         //superfici
         'surface-0':'#111211',

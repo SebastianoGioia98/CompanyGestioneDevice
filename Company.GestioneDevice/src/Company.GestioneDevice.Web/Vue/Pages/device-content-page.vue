@@ -255,6 +255,10 @@
         cursor: pointer !important;
         background: rgb(var(--v-theme-primary));
     }
+
+    button {
+        color: rgb(var(--v-theme-OnPrimary)) !important;
+    }
 </style>
 
 
