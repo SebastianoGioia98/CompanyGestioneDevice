@@ -5,16 +5,25 @@
         <!--    === Title Section ===   -->
         <v-row no-gutters class="align-center mb-5 flex-grow-0">
             <v-btn icon="mdi-arrow-left" @click="changePage('users/')"
-                   variant="text" size="small"
-                   class="ml-auto mr-4">
+                   variant="tonal" color="secondary" size="small"
+                   class="ml-auto mr-6">
             </v-btn>
 
             <h1 class="pageTitle mr-10 ">User</h1>
 
             <v-select :items="userList" v-model="selectedUser" @update:modelValue="changeUser"
                       item-title="username" item-value="id"
-                      hide-details variant="solo-filled" density="compact"
-                      max-width="200" class="mr-6">
+                      hide-details variant="solo-inverted" density="compact"
+                      max-width="200" class="mr-6 userSelect">
+                <!-- Slot prepend: freccia a sinistra -->
+                <template #prepend-inner>
+                    <v-icon class="me-2 rightTurn90">mdi-triangle-small-down</v-icon>
+                </template>
+
+                <!-- Slot append: freccia a destra -->
+                <template #append-inner>
+                    <v-icon class="ms-2 rightTurn90">mdi-triangle-small-up</v-icon>
+                </template>
             </v-select>
 
 
@@ -25,10 +34,16 @@
             <v-menu activator="#menu-activator">
                 <v-list lines="two">
                     <v-list-item class="listItem">
-                        <v-list-item-title @click="showEditDialog = true">Edit User</v-list-item-title>
+                        <v-list-item-title @click="onBtnEditUserClick">Edit User</v-list-item-title>
+                        <template v-slot:prepend>
+                            <v-icon icon="mdi-pencil" @click="onBtnEditUserClick"></v-icon>
+                        </template>
                     </v-list-item>
                     <v-list-item class="listItem">
-                        <v-list-item-title @click="showAssignUserPoliciesDialog = true">Assign User Policies</v-list-item-title>
+                        <v-list-item-title @click="onBtnAssignUserPoliciesClick">Assign User Policies</v-list-item-title>
+                        <template v-slot:prepend>
+                            <v-icon icon="mdi-account-cog" @click="onBtnAssignUserPoliciesClick"></v-icon>
+                        </template>
                     </v-list-item>
                 </v-list>
             </v-menu>
@@ -169,10 +184,22 @@
     </v-container>
 </template>
 
-<style scoped>
+<style>
     .listItem:hover {
         cursor: pointer !important;
         background: rgb(var(--v-theme-primary));
+    }
+
+    .rightTurn90 {
+        transform: rotate(90deg);
+    }
+
+    .userSelect .v-select__menu-icon {
+        display: none !important;
+    }
+
+    .userSelect .v-field__input {
+        justify-content: center;
     }
 </style>
 
@@ -307,7 +334,15 @@
 
 
             //   === btn methods
+            onBtnEditUserClick() {
+                let that = this;
+                that.showEditDialog = true;
+            },
 
+            onBtnAssignUserPoliciesClick() {
+                let that = this;
+                that.showAssignUserPoliciesDialog = true;
+            },
 
 
 
