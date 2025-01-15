@@ -5,16 +5,25 @@
         <!--    === Title Section ===   -->
         <v-row no-gutters class="align-center mb-5 flex-grow-0">
             <v-btn icon="mdi-arrow-left" @click="changePage('devices/')"
-                   variant="text" size="small"
-                   class="ml-auto mr-4">
+                   variant="tonal" color="secondary" size="small"
+                   class="ml-auto mr-6">
             </v-btn>
 
             <h1 class="pageTitle mr-10 ">Device</h1>
 
             <v-select :items="deviceList" v-model="selectedDevice" @update:modelValue="changeDevice"
                       item-title="name" item-value="id"
-                      hide-details variant="solo-filled" density="compact"
+                      hide-details variant="solo-inverted" density="compact"
                       max-width="200" class="mr-6">
+                <!-- Slot prepend: freccia a sinistra -->
+                <template #prepend-inner>
+                    <v-icon class="me-2 rightTurn90">mdi-triangle-small-down</v-icon>
+                </template>
+
+                <!-- Slot append: freccia a destra -->
+                <template #append-inner class="menuSelectDeviceAppend">
+                    <v-icon class="ms-2 rightTurn90">mdi-triangle-small-up</v-icon>
+                </template>
             </v-select>
 
 
@@ -330,10 +339,26 @@
     </v-container>
 </template>
 
-<style scoped>
+<style >
     .listItem:hover {
         cursor: pointer !important;
         background: rgb(var(--v-theme-primary));
+    }
+
+    .menuSelectDeviceAppend.mdi-menu-down {
+        display: none;
+    }
+
+    .rightTurn90 {
+        transform: rotate(90deg);
+    }
+
+    .v-select .v-select__menu-icon {
+        display: none !important;
+    }
+
+    .v-select .v-field__input {
+        justify-content: center;
     }
 </style>
 
