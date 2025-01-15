@@ -14,7 +14,7 @@
             <v-select :items="deviceList" v-model="selectedDevice" @update:modelValue="changeDevice"
                       item-title="name" item-value="id"
                       hide-details variant="solo-inverted" density="compact"
-                      max-width="200" class="mr-6">
+                      max-width="200" class="mr-6 deviceSelect">
                 <!-- Slot prepend: freccia a sinistra -->
                 <template #prepend-inner>
                     <v-icon class="me-2 rightTurn90">mdi-triangle-small-down</v-icon>
@@ -330,11 +330,11 @@
         transform: rotate(90deg);
     }
 
-    .v-select .v-select__menu-icon {
+    .deviceSelect .v-select__menu-icon{
         display: none !important;
     }
 
-    .v-select .v-field__input {
+    .deviceSelect .v-field__input {
         justify-content: center;
     }
 </style>
