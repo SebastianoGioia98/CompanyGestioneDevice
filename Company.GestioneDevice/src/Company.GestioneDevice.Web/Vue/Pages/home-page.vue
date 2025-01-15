@@ -105,21 +105,21 @@
         },
         methods: {
 
-            openContent(link) {
-                window.location.href = link;
+          
+
+            changePage(destination) {
+                window.location.href = destination;
             },
-
-
 
             goToUsers() {
                 let that = this;
-                that.openContent("users");
+                that.changePage("users");
             },
 
 
              goToDevices() {
                  let that = this;
-                 that.openContent("devices");
+                 that.changePage("devices");
             }
 
         },

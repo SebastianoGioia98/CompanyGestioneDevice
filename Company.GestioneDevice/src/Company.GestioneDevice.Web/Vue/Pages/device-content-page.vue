@@ -4,7 +4,7 @@
 
         <!--    === Title Section ===   -->
         <v-row no-gutters class="align-center mb-5 flex-grow-0">
-            <v-btn icon="mdi-arrow-left" @click="changePage('devices/')"
+            <v-btn icon="mdi-arrow-left" @click="changePage('devices')"
                    variant="tonal" color="secondary" size="small"
                    class="ml-auto mr-6">
             </v-btn>

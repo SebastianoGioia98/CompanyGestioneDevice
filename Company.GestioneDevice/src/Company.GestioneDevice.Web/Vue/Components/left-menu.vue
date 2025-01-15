@@ -60,12 +60,12 @@
                     {
                         title: "Devices",
                         icon: "mdi-devices",
-                        redirect: "/devices/"
+                        redirect: "/devices"
                     },
                     {
                         title: "Users",
                         icon: "mdi-account",
-                        redirect: "/users/"
+                        redirect: "/users"
                     }
                 ],
                 pages_bottom: [
