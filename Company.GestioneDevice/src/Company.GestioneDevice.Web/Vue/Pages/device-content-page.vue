@@ -26,15 +26,33 @@
                 <v-list lines="two">
                     <v-list-item class="listItem">
                         <v-list-item-title @click="onBtnEditDeviceClick">Edit Device</v-list-item-title>
+                        <template v-slot:prepend>
+                            <v-icon icon="mdi-pencil"></v-icon>
+                        </template>
                     </v-list-item>
                     <v-list-item class="listItem">
                         <v-list-item-title @click="showAssignUserDialog = true">Assign User</v-list-item-title>
+                        <template v-slot:prepend>
+                            <v-icon icon="mdi-attachment"></v-icon>
+                        </template>
+                    </v-list-item>
+                    <v-list-item class="listItem">
+                        <v-list-item-title @click="showSoftwareHistoryDialog = true">Device Software History</v-list-item-title>
+                        <template v-slot:prepend>
+                            <v-icon icon="mdi-history"></v-icon>
+                        </template>
                     </v-list-item>
                     <v-list-item class="listItem">
                         <v-list-item-title @click="showUpdateDeviceDialog = true">Update Device Software</v-list-item-title>
+                        <template v-slot:prepend>
+                            <v-icon icon="mdi-update"></v-icon>
+                        </template>
                     </v-list-item>
                     <v-list-item class="listItem">
                         <v-list-item-title @click="getDeviceGeolocalization">Find Device</v-list-item-title>
+                        <template v-slot:prepend>
+                            <v-icon icon="mdi-map-marker"></v-icon>
+                        </template>
                     </v-list-item>
                 </v-list>
             </v-menu>
@@ -50,7 +68,69 @@
         <v-row no-gutters class="d-flex flex-grow-1 overflow-y-hidden">
             <v-card v-if="deviceDetail !== null" class="elevation-0 w-100 h-100 d-flex flex-column pa-4" rounded="lg" color="transparent">
                 <v-row class="h-100">
-                    <v-col cols="7" class="d-flex flex-column">
+                    <v-col cols="12" class="d-flex flex-column h-100">
+                        <v-row class="flex-grow-0 d-flex" style="height:23%">
+                            <v-col cols="3" class="d-flex flex-column">
+                                <div class="text-h5 font-weight-bold">Type</div>
+                                <div class="text-h5 opacity-80">{{getDeviceType(deviceDetail.type)}}</div>
+                            </v-col>
+                            <v-col cols="3" class="d-flex flex-column">
+                                <div class="text-h5 font-weight-bold">Model</div>
+                                <div class="text-h5 opacity-80">{{deviceDetail.model}}</div>
+                            </v-col>
+                            <v-col cols="3" class="d-flex flex-column">
+                                <div class="text-h5 font-weight-bold">Software Version</div>
+                                <div class="text-h5 opacity-80">
+                                    {{deviceDetail.lastSoftwareVersion.name}}  {{deviceDetail.lastSoftwareVersion.version}}
+                                </div>
+                            </v-col>
+                            <v-col cols="3" class="d-flex flex-column">
+                                <div class="text-h5 font-weight-bold">Create Time</div>
+                                <div class="text-h5 opacity-80">
+                                    {{getDate(deviceDetail.creationTime)}}
+                                </div>
+                            </v-col>
+                        </v-row>
+
+                        <v-row class="flex-grow-0 d-flex" style="height:17%">
+                            <v-col cols="12" class="d-flex ga-2 h-100">
+                                <div class="text-h5 opacity-80">The</div>
+                                <div class="text-h5 font-weight-bold">Holder</div>
+                                <div class="text-h5 opacity-80">is</div>
+                                <v-btn @click="goToUser"
+                                       variant="text" size="small"
+                                       class="text-h5 opacity-80 text-primary"
+                                       v-tooltip="'Go to user'">
+                                    {{deviceDetail.user.username}}
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+
+                        <v-row class="flex-grow-1 d-flex" style="height: 60%">
+                            <v-col cols="12" class="d-flex flex-column h-100">
+                                <div class="flex-grow-0 text-h5  font-weight-bold">Features</div>
+
+                                <div class="flex-grow-1 d-flex flex-wrap justify-space-between overflow-y-auto">
+                                    <div v-for="(feature, idx) in deviceDetail.features" class="d-flex align-center mt-3" style="width: 30%; height: fit-content;">
+                                        <div class="text-h5 opacity-80 mr-auto">
+                                            {{feature.name}}
+                                        </div>
+                                        <v-switch v-model="feature.state" disabled hide-details>
+                                        </v-switch>
+                                    </div>
+                                </div>
+
+
+                            </v-col>
+
+
+                        </v-row>
+
+
+                    </v-col>
+
+
+                    <!--<v-col cols="7" class="d-flex flex-column">
                         <v-row>
                             <v-col cols="6" class="d-flex flex-column">
                                 <div class="text-h5 font-weight-bold">Type</div>
@@ -105,7 +185,7 @@
                             </v-col>
                         </v-row>
 
-                    </v-col>
+                    </v-col>-->
 
                 </v-row>
 
@@ -206,7 +286,7 @@
         <v-dialog min-width="500" max-width="400"
                   :modelValue="showAssignUserDialog"
                   persistent>
-            <v-card prepend-icon="mdi-pensile" title="Assign User to Device">
+            <v-card prepend-icon="mdi-attachment" title="Assign User to Device">
 
                 <v-card-text>
                     <v-form v-model="assignUserFormValid" ref="assignUserForm">
@@ -255,10 +335,6 @@
         cursor: pointer !important;
         background: rgb(var(--v-theme-primary));
     }
-
-    button {
-        color: rgb(var(--v-theme-OnPrimary)) !important;
-    }
 </style>
 
 
@@ -273,7 +349,7 @@
             return {
                 deviceList: [],
                 featureList: [],
-                userList:[],
+                userList: [],
                 deviceDetail: null,
 
                 //features property
@@ -286,7 +362,7 @@
                     version: ""
                 },
                 editDeviceInfo: {},
-                assignedUser:null,
+                assignedUser: null,
 
                 //state property
                 loadingState: false,
@@ -297,7 +373,8 @@
                 showEditDialog: false,
                 showGeolocalizationDialog: false,
                 showUpdateDeviceDialog: false,
-                showAssignUserDialog:false,
+                showAssignUserDialog: false,
+                showSoftwareHistoryDialog: false,
 
                 //form properties
                 updateSoftwareFormValid: false,
@@ -534,7 +611,7 @@
                         that.snackbarOpt = snackOpt;
                     });
 
-                
+
             },
 
             onAssignUserDialogClose(state) {
@@ -612,6 +689,8 @@
                 // console.log("validateAssignUserForm", this.updateSoftwareFormValid)
             },
 
+
+
             //    === other mothods
             getDate(dateString) {
                 return services.formatDateTime(dateString);
@@ -624,6 +703,12 @@
             changePage(destination) {
                 window.location.href = destination;
             },
+
+            goToUser() {
+                let that = this;
+                //Redirect to retrigger API
+                this.changePage("users/" + that.deviceDetail.user.id);
+            }
         },
 
     };
