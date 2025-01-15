@@ -70,9 +70,9 @@
                 ],
                 pages_bottom: [
                     {
-                        title: "Logout",
-                        icon: "mdi-logout",
-                        redirect: "/home/logout/"
+                        //title: "Logout",
+                        //icon: "mdi-logout",
+                        //redirect: "/home/logout/"
                     },
                 ],
 
