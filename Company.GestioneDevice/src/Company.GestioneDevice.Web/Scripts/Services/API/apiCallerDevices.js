@@ -51,4 +51,9 @@
 		const urlToCall = this.url + `assign-user-device`;
 		return this.restFulApiCallerHelper.callPut(urlToCall, data);
 	}
+
+	getSoftwareVersionList(id) {
+		const urlToCall = this.url + `software-versions/` + id;
+		return this.restFulApiCallerHelper.callGet(urlToCall);
+	}
 }

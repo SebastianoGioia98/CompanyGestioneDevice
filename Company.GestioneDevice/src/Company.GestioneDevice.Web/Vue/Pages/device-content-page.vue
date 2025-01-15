@@ -36,31 +36,31 @@
                     <v-list-item class="listItem">
                         <v-list-item-title @click="onBtnEditDeviceClick">Edit Device</v-list-item-title>
                         <template v-slot:prepend>
-                            <v-icon icon="mdi-pencil"></v-icon>
+                            <v-icon icon="mdi-pencil" @click="onBtnEditDeviceClick"></v-icon>
                         </template>
                     </v-list-item>
                     <v-list-item class="listItem">
-                        <v-list-item-title @click="showAssignUserDialog = true">Assign User</v-list-item-title>
+                        <v-list-item-title @click="onBtnAssignUserClick">Assign User</v-list-item-title>
                         <template v-slot:prepend>
-                            <v-icon icon="mdi-attachment"></v-icon>
+                            <v-icon icon="mdi-attachment" @click="onBtnAssignUserClick"></v-icon>
                         </template>
                     </v-list-item>
                     <v-list-item class="listItem">
-                        <v-list-item-title @click="showSoftwareHistoryDialog = true">Device Software History</v-list-item-title>
+                        <v-list-item-title @click="onBtnSoftwareHistoryClick">Device Software History</v-list-item-title>
                         <template v-slot:prepend>
-                            <v-icon icon="mdi-history"></v-icon>
+                            <v-icon icon="mdi-history" @click="onBtnSoftwareHistoryClick"></v-icon>
                         </template>
                     </v-list-item>
                     <v-list-item class="listItem">
-                        <v-list-item-title @click="showUpdateDeviceDialog = true">Update Device Software</v-list-item-title>
+                        <v-list-item-title @click="onBtnUpdateDeviceClick = true">Update Device Software</v-list-item-title>
                         <template v-slot:prepend>
-                            <v-icon icon="mdi-update"></v-icon>
+                            <v-icon icon="mdi-update" @click="onBtnUpdateDeviceClick"></v-icon>
                         </template>
                     </v-list-item>
                     <v-list-item class="listItem">
                         <v-list-item-title @click="getDeviceGeolocalization">Find Device</v-list-item-title>
                         <template v-slot:prepend>
-                            <v-icon icon="mdi-map-marker"></v-icon>
+                            <v-icon icon="mdi-map-marker" @click="getDeviceGeolocalization"></v-icon>
                         </template>
                     </v-list-item>
                 </v-list>
@@ -129,82 +129,11 @@
                                     </div>
                                 </div>
 
-
                             </v-col>
-
-
                         </v-row>
-
-
                     </v-col>
-
-
-                    <!--<v-col cols="7" class="d-flex flex-column">
-                        <v-row>
-                            <v-col cols="6" class="d-flex flex-column">
-                                <div class="text-h5 font-weight-bold">Type</div>
-                                <div class="text-h5 opacity-80">{{getDeviceType(deviceDetail.type)}}</div>
-                            </v-col>
-                            <v-col cols="6" class="d-flex flex-column">
-                                <div class="text-h5 font-weight-bold">Model</div>
-                                <div class="text-h5 opacity-80">{{deviceDetail.model}}</div>
-                            </v-col>
-                        </v-row>
-
-                        <v-row>
-                            <v-col cols="6" class="d-flex flex-column">
-                                <div class="text-h5 font-weight-bold">Software Version</div>
-                                <div class="text-h5 opacity-80">
-                                    {{deviceDetail.lastSoftwareVersion.name}}  {{deviceDetail.lastSoftwareVersion.version}}
-                                </div>
-                            </v-col>
-                            <v-col cols="6" class="d-flex flex-column">
-                                <div class="text-h5 font-weight-bold">Holder</div>
-                                <div class="text-h5 opacity-80">{{deviceDetail.user.username}}</div>
-                            </v-col>
-                        </v-row>
-
-                        <v-row>
-                            <v-col cols="6" class="d-flex flex-column">
-                                <div class="text-h5 font-weight-bold">Create Time</div>
-                                <div class="text-h5 opacity-80">
-                                    {{getDate(deviceDetail.creationTime)}}
-                                </div>
-                            </v-col>
-
-                        </v-row>
-
-                    </v-col>
-
-                    <v-col cols="5" class="h-100 d-flex">
-                        <v-row class="h-100">
-                            <v-col cols="12" class="h-100 d-flex flex-column">
-                                <div class="flex-grow-0 text-h5  font-weight-bold">Features</div>
-
-                                <div class="h-100 d-flex flex-column overflow-y-auto">
-                                    <div v-for="(feature, idx) in deviceDetail.features" class="w-100 d-flex align-center mt-3">
-                                        <div class="text-h5 opacity-80 mr-auto">
-                                            {{feature.name}}
-                                        </div>
-                                        <v-switch v-model="feature.state" disabled hide-details>
-                                        </v-switch>
-                                    </div>
-                                </div>
-
-                            </v-col>
-                        </v-row>
-
-                    </v-col>-->
-
                 </v-row>
-
-
-
-
             </v-card>
-
-
-
         </v-row>
 
 
@@ -333,6 +262,54 @@
         </v-dialog>
 
 
+
+        <!--    Software History   -->
+        <v-dialog min-width="500" max-width="400"
+                  :modelValue="showSoftwareHistoryDialog"
+                  persistent>
+            <v-card prepend-icon="mdi-update" title="Device Software Update History">
+
+                <v-card-text>
+                    <v-list lines="two">
+                        <v-list-item v-for="(softVer, idx) in deviceSoftwareVersionList" class="d-flex flex-column flex-wrap align-content-start">
+                            <div class="d-flex ga-2">
+                                <v-icon class="">mdi-circle-small</v-icon>
+                                <div class="text-body opacity-80 mr-auto">
+                                    Updated to
+                                </div>
+
+                                <div class="text-body font-weight-bold mr-auto">
+                                    {{softVer.name}} {{softVer.version}}
+                                </div>
+
+                                <div class="text-body opacity-80 mr-auto">
+                                    on
+                                </div>
+
+                                <div class="text-body font-weight-bold">
+                                    {{getDate(deviceDetail.creationTime)}}
+                                </div>
+                            </div>
+
+                        </v-list-item>
+                    </v-list>
+                </v-card-text>
+
+
+                <template v-slot:actions>
+                    <v-spacer></v-spacer>
+
+                    <v-btn @click="onSoftwareHistoryDialogClose(true)">
+                        OK
+                    </v-btn>
+                </template>
+            </v-card>
+        </v-dialog>
+
+
+
+
+
         <!--    === Snackbar ===   -->
         <snackbar :option="snackbarOpt"></snackbar>
 
@@ -374,9 +351,10 @@
             return {
                 deviceList: [],
                 featureList: [],
+                deviceSoftwareVersionList: [],
                 userList: [],
                 deviceDetail: null,
-
+               
                 //features property
                 geolocalization: {
                     latitude: 0,
@@ -446,14 +424,16 @@
                     console.log("userList : ", that.userList);
 
                 });
+
+
+
+           
         },
         mounted() {
             let that = this;
 
         },
         methods: {
-
-
             //   === Select methods
             refeshDeviceList() {
                 console.log("ON getDevices");
@@ -486,6 +466,16 @@
                                 .getDeviceDetails(that.deviceId).then(res => {
                                     that.deviceDetail = res.data;
                                     console.log("On getDeviceDetails, res: ", that.deviceDetail);
+
+                                    //get deviceSoftareVersionList
+                                    services.ApiCallerDevices
+                                        .getSoftwareVersionList(that.deviceDetail.id).then(res => {
+                                            //load featureList
+                                            that.deviceSoftwareVersionList = res.data;
+
+                                            console.log("deviceSoftwareVersionList : ", that.deviceSoftwareVersionList);
+
+                                        });
                                 });
                         }
 
@@ -501,6 +491,19 @@
                 let that = this;
                 //Redirect to retrigger API
                 this.changePage("devices/" + that.selectedDevice);
+            },
+
+
+
+            //    === menu methods
+            getDeviceGeolocalization() {
+                let that = this;
+                services.ApiCallerDevices
+                    .getDeviceGeolocalization(that.deviceDetail.id).then(res => {
+                        console.log("On getDeviceGeolocalization, res: ", res.data);
+                        that.geolocalization = res.data;
+                        that.showGeolocalizationDialog = true;
+                    });
             },
 
 
@@ -529,20 +532,20 @@
                 that.showEditDialog = true;
             },
 
-
-
-
-            //    === menu methods
-            getDeviceGeolocalization() {
+            onBtnAssignUserClick() {
                 let that = this;
-                services.ApiCallerDevices
-                    .getDeviceGeolocalization(that.deviceDetail.id).then(res => {
-                        console.log("On getDeviceGeolocalization, res: ", res.data);
-                        that.geolocalization = res.data;
-                        that.showGeolocalizationDialog = true;
-                    });
+                that.showSoftwareHistoryDialog = true;
             },
 
+            onBtnSoftwareHistoryClick() {
+                let that = this;
+                that.showSoftwareHistoryDialog = true;
+            },
+
+            onBtnUpdateDeviceClick() {
+                let that = this;
+                that.showUpdateDeviceDialog = true;
+            },
 
 
 
@@ -700,6 +703,17 @@
                     });
             },
 
+            onSoftwareHistoryDialogClose(state) {
+                let that = this;
+                console.log("onSoftareHistoryDialogClose, state: ", state);
+
+                //close the dialog
+                that.showSoftwareHistoryDialog = false;
+
+                //cancel update
+                //if (state === false) return;
+                return;
+            },
 
 
 
