@@ -113,9 +113,9 @@
 
 
         <!--    === Dialogs ===   -->
-        <!--    Edit Device-->
-        <dialog-edit-user v-model="showEditDialog"  :user="userDetail" @close="onDialogEditClose"></dialog-edit-user>
-        
+        <!--    Edit User-->
+        <dialog-edit-user v-model="showEditDialog" :user="clonedUserDetail" @close="onDialogEditClose"></dialog-edit-user>
+
         <!--    Assign User Policies-->
         <v-dialog min-width="500" max-width="400"
                   :modelValue="showAssignUserPoliciesDialog"
@@ -189,7 +189,7 @@
                 userList: [],
                 userDetail: null,
                 policyList: [],
-               
+
 
                 //features properties
                 assignedPoliciesIds: [],
@@ -201,11 +201,11 @@
 
                 //dialog property
                 showEditDialog: false,
-                showAssignUserPoliciesDialog:false,
-              
+                showAssignUserPoliciesDialog: false,
+
                 //form property
                 assignUserPolicieFormValid: false,
-               
+
 
                 //snackbar
                 snackbarOpt: {
@@ -222,7 +222,9 @@
             userId: null
         },
         computed: {
-
+            clonedUserDetail() {
+                return { ...this.userDetail }; // Crea una copia shallow
+            },
         },
         created() {
             let that = this;
@@ -439,7 +441,7 @@
                 this.$refs.assignUserForm.validate();
                 // console.log("validateUpdateSoftwareForm", this.updateSoftwareFormValid)
             },
-            
+
 
 
 
@@ -448,7 +450,7 @@
                 return services.formatDateTime(dateString);
             },
 
-            
+
 
             changePage(destination) {
                 window.location.href = destination;
