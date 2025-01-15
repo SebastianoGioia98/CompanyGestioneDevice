@@ -119,8 +119,8 @@
                             <v-col cols="12" class="d-flex flex-column h-100">
                                 <div class="flex-grow-0 text-h5  font-weight-bold">Features</div>
 
-                                <div class="flex-grow-1 d-flex flex-wrap justify-space-between overflow-y-auto">
-                                    <div v-for="(feature, idx) in deviceDetail.features" class="d-flex align-center mt-3" style="width: 30%; height: fit-content;">
+                                <div class="flex-grow-1 d-flex flex-wrap overflow-y-auto" style="column-gap: 17rem">
+                                    <div v-for="(feature, idx) in deviceDetail.features" class="d-flex align-center" style="width: 20%; height: fit-content;">
                                         <div class="text-h5 opacity-80 mr-auto">
                                             {{feature.name}}
                                         </div>
