@@ -380,7 +380,7 @@
                         //preparo il messaggio per lo snackbar
                         snackOpt = {
                             snackbar: true,
-                            text: 'Device created successfully!',
+                            text: 'Device added successfully!',
                             timeout: 2500,
                             color: 'green'
                         }

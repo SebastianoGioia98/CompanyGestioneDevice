@@ -364,7 +364,7 @@
                         //preparo il messaggio per lo snackbar
                         snackOpt = {
                             snackbar: true,
-                            text: 'User created successfully!',
+                            text: 'User added successfully!',
                             timeout: 2500,
                             color: 'green'
                         }

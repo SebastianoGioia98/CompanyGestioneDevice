@@ -388,7 +388,7 @@
                         //preparo il messaggio per lo snackbar
                         snackOpt = {
                             snackbar: true,
-                            text: 'User Policies Assigned successfully!',
+                            text: 'User Policies assigned successfully!',
                             timeout: 2500,
                             color: 'green'
                         }

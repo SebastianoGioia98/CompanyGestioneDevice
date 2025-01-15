@@ -21,7 +21,7 @@
                 </template>
 
                 <!-- Slot append: freccia a destra -->
-                <template #append-inner class="menuSelectDeviceAppend">
+                <template #append-inner>
                     <v-icon class="ms-2 rightTurn90">mdi-triangle-small-up</v-icon>
                 </template>
             </v-select>
@@ -320,10 +320,6 @@
     .listItem:hover {
         cursor: pointer !important;
         background: rgb(var(--v-theme-primary));
-    }
-
-    .menuSelectDeviceAppend.mdi-menu-down {
-        display: none;
     }
 
     .rightTurn90 {
