@@ -530,7 +530,7 @@
 
             onBtnAssignUserClick() {
                 let that = this;
-                that.showSoftwareHistoryDialog = true;
+                that.showAssignUserDialog = true;
             },
 
             onBtnSoftwareHistoryClick() {
