@@ -124,7 +124,7 @@
                                         <div class="text-h5 opacity-80 mr-auto">
                                             {{feature.name}}
                                         </div>
-                                        <v-switch v-model="feature.state" disabled hide-details>
+                                        <v-switch v-model="feature.state" inset disabled hide-details>
                                         </v-switch>
                                     </div>
                                 </div>

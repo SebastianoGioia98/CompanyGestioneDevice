@@ -151,3 +151,17 @@ html {
     }
 }
 
+
+
+/*     === Text-Field ===  */
+.outlineTextField .v-input__control .v-field__outline {
+
+    .v-field__outline__start {
+        border-width: 3px 0 3px 3px;
+        // border-color: rgb(var(--v-theme-surface)) !important;
+    }
+
+    .v-field__outline__end {
+        border-width: 3px 3px 3px 0;
+    }
+}

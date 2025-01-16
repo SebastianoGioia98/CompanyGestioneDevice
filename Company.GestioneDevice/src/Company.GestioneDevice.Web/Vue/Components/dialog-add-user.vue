@@ -163,7 +163,7 @@
                 this.$emit("close", res);
 
                 //svuoto il form
-                newUser = {
+                that.newUser = {
                     username: '',
                     name: '',
                     surname: '',
