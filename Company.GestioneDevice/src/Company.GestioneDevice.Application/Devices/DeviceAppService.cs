@@ -21,7 +21,7 @@ using Volo.Abp.Guids;
 using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
 using Volo.Abp.Validation;
-
+using Company.GestioneDevice.shared;
 
 
 namespace Company.GestioneDevice.Devices;
@@ -93,26 +93,100 @@ public class DeviceAppService : CrudAppService<
     }
 
 
-    public async Task<ActionResult<(long totalCount, List<DeviceDto> items)>> GetDeviceList()
+    //public async Task<ActionResult<(long totalCount, List<DeviceDto> items)>> GetDeviceList()
+    //{
+    //    //Get the IQueryable<Device> from the repository
+    //    var queryable = await _repository.GetQueryableAsync();
+
+    //    //Prepare a query to join devices and users
+    //    var query = from device in queryable
+    //                join user in await _deviceManager.GetQueryableUsers() on device.UserId equals user.Id
+    //                select new { device, user };
+
+    //    //Paging
+    //    //query = query
+    //    //    .OrderBy(NormalizeSorting(input.Sorting))
+    //    //    .Skip(input.SkipCount)
+    //    //    .Take(input.MaxResultCount);
+
+    //    //Execute the query and get a list
+    //    var queryResult = await AsyncExecuter.ToListAsync(query);
+
+    //    //Convert the query result to a list of DeviceDto objects
+    //    var deviceDtos = queryResult.Select(x =>
+    //    {
+    //        var deviceDto = ObjectMapper.Map<Device, DeviceDto>(x.device);
+    //        deviceDto.User = ObjectMapper.Map<User, UserLookupDto>(x.user);
+    //        return deviceDto;
+    //    }).ToList();
+
+    //    //Get the total count with another query
+    //    // var totalCount = await _repository.GetCountAsync();
+
+    //    return new OkObjectResult(
+    //        (deviceDtos)
+    //    );
+    //}
+
+    [HttpGet("api/app/device/device-list")]
+    public async Task<ActionResult<shared.PagedResultDto<DeviceDto>>> GetDeviceList(
+      [FromQuery] DeviceType[] type = null, // Array di tipi
+      [FromQuery] Guid[] userIds = null, // Array di UtentiDto
+      [FromQuery] int pageNumber = 1, // Numero di pagina richiesto
+      [FromQuery] int itemsPerPage = 10 // Numero di elementi per pagina
+  )
     {
-        //Get the IQueryable<Device> from the repository
+
+        // Get the IQueryable<Device> from the repository
         var queryable = await _repository.GetQueryableAsync();
 
-        //Prepare a query to join devices and users
+        // Prepare a query to join devices and users
         var query = from device in queryable
                     join user in await _deviceManager.GetQueryableUsers() on device.UserId equals user.Id
                     select new { device, user };
 
-        //Paging
-        //query = query
-        //    .OrderBy(NormalizeSorting(input.Sorting))
-        //    .Skip(input.SkipCount)
-        //    .Take(input.MaxResultCount);
+        // Apply filters
+        if (type != null && type.Length > 0)
+        {
+            query = query.Where(x => type.Contains(x.device.Type));
+        }
 
-        //Execute the query and get a list
+        if (userIds != null && userIds.Length > 0)
+        {
+            query = query.Where(x => userIds.Contains(x.user.Id));
+        }
+
+        // **Add ordering to the query**
+        query = query.OrderBy(x => x.device.Id); // Ordina per ID del dispositivo o qualsiasi altra proprietà unica
+
+        // **Calculate total count**
+        var totalCount = await AsyncExecuter.CountAsync(query);
+
+        // **Calculate total pages**
+        var totalPages = (int)Math.Ceiling((double)totalCount / itemsPerPage);
+
+        // Ensure pageNumber is within bounds
+        if (pageNumber < 1)
+        {
+            pageNumber = 1; // Default to the first page
+        }
+        else if (pageNumber > totalPages)
+        {
+            pageNumber = totalPages; // Default to the last page
+        }
+
+        // **Calculate skipCount**
+        var skipCount = (pageNumber - 1) * itemsPerPage;
+
+        // Apply paging to the query
+        query = query
+            .Skip(skipCount)
+            .Take(itemsPerPage);
+
+        // Execute the query and get a list
         var queryResult = await AsyncExecuter.ToListAsync(query);
 
-        //Convert the query result to a list of DeviceDto objects
+        // Convert the query result to a list of DeviceDto objects
         var deviceDtos = queryResult.Select(x =>
         {
             var deviceDto = ObjectMapper.Map<Device, DeviceDto>(x.device);
@@ -120,12 +194,15 @@ public class DeviceAppService : CrudAppService<
             return deviceDto;
         }).ToList();
 
-        //Get the total count with another query
-        // var totalCount = await _repository.GetCountAsync();
+        // **Prepare the response DTO**
+        var result = new shared.PagedResultDto<DeviceDto>
+        {
+            TotalCount = totalCount,
+            TotalPages = totalPages,
+            Items = deviceDtos
+        };
 
-        return new OkObjectResult(
-            (deviceDtos)
-        );
+        return new OkObjectResult(result);
     }
 
 
@@ -173,7 +250,7 @@ public class DeviceAppService : CrudAppService<
         //softwareVersion
         if (queryResult.Device.SoftwareVersions.Any())
         {
-            deviceDto.LastSoftwareVersion = ObjectMapper.Map<SoftwareVersion, SoftwareVersionLookupDto>(queryResult.Device.SoftwareVersions[queryResult.Device.SoftwareVersions.Count-1]);
+            deviceDto.LastSoftwareVersion = ObjectMapper.Map<SoftwareVersion, SoftwareVersionLookupDto>(queryResult.Device.SoftwareVersions[queryResult.Device.SoftwareVersions.Count - 1]);
         }
 
         //DeviceFeature
