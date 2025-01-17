@@ -7,8 +7,29 @@
 		this.restFulApiCallerHelper = helper;
 	}
 
-	getUsers() {
-		const urlToCall = this.url;
+	getUsers(userName = null, itemsPerPage = 10, pageNumber = 1, sortByKey = null, sortByOrder = null) {
+
+		// Costruzione dei query params
+		const params = new URLSearchParams();
+
+		// Aggiungi i parametri solo se sono presenti
+		params.append('itemsPerPage', itemsPerPage);
+		params.append('pageNumber', pageNumber);
+
+		if (sortByKey != null && sortByOrder != null) {
+			params.append('sortByKey', sortByKey);
+			params.append('sortByOrder', sortByOrder);
+		}
+
+		if (userName != null) {
+			params.append('userName', userName);
+		}
+
+		// Costruzione dell'URL completo
+		const urlToCall = `${this.url}user-list?${params.toString()}`;
+
+		//console.log("on getDevices url:")
+
 		return this.restFulApiCallerHelper.callGet(urlToCall);
 	}
 

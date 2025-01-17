@@ -19,7 +19,7 @@ using Volo.Abp.Users;
 using Volo.Abp.Validation;
 using static Volo.Abp.Identity.Settings.IdentitySettingNames;
 using static Volo.Abp.UI.Navigation.DefaultMenuNames.Application;
-
+using System.Linq.Dynamic.Core;
 
 namespace Company.GestioneDevice.Users;
 
@@ -43,6 +43,103 @@ public class UtenteAppService : CrudAppService<
         _guidGenerator = guidGenerator;
         _repository = repository;
         _userManager = userManager;
+    }
+
+
+    [HttpGet("api/app/utente/user-list")]
+    public async Task<ActionResult<shared.PagedResultDto<UserDto>>> GetDeviceList(
+     [FromQuery] int pageNumber = 1, // Numero di pagina richiesto
+     [FromQuery] int itemsPerPage = 10, // Numero di elementi per pagina
+     [FromQuery] string sortByKey = "Id",  // Valore predefinito per Key
+     [FromQuery] string sortByOrder = "asc", // Valore predefinito per Order
+     [FromQuery] string userName = null // Valore predefinito per Order
+   )
+    {
+
+
+
+
+        // Get the IQueryable<Device> from the repository
+        var query = await _repository.GetQueryableAsync();
+
+       
+
+        // Apply filters
+        if (userName != null)
+        {
+            query = query.Where(x => x.Username.Contains(userName));
+        }
+
+        // Applica ordinamento dinamico
+        var allowedKeys = new[] { "username", "name", "surname", "email" }; // Campi accettabili
+
+        if (sortByKey != null && !string.IsNullOrWhiteSpace(sortByKey) && !string.IsNullOrWhiteSpace(sortByOrder) &&
+            allowedKeys.Contains(sortByKey.ToLower()))
+        {
+            var key = ToPascalCase(sortByKey); // Converte "type" in "Type"
+            var order = sortByOrder.ToLower();
+
+
+           
+                // Usa "device.<key>" per specificare esplicitamente il percorso
+                query = query.AsQueryable().OrderBy($"{key} {order}");
+
+            
+
+
+        }
+        else
+        {
+            // Default sorting (se il parametro sortBy non è presente o non è valido)
+            query = query.OrderBy(x => x.Id);
+        }
+
+        // **Calculate total count**
+        var totalCount = await AsyncExecuter.CountAsync(query);
+
+        // Calcola il numero totale di pagine
+        var totalPages = totalCount > 0
+            ? (int)Math.Ceiling((double)totalCount / itemsPerPage)
+            : 1; // Almeno una pagina anche se vuota
+
+        // Ensure pageNumber is within bounds
+        if (pageNumber < 1)
+        {
+            pageNumber = 1; // Default to the first page
+        }
+        else if (pageNumber > totalPages)
+        {
+            pageNumber = totalPages; // Default to the last page
+        }
+
+        // **Calculate skipCount**
+        var skipCount = Math.Max(0, (pageNumber - 1) * itemsPerPage);
+
+        // Apply paging to the query
+        query = query
+            .Skip(skipCount)
+            .Take(itemsPerPage);
+
+        // Execute the query and get a list
+        var queryResult = await AsyncExecuter.ToListAsync(query);
+
+        // Convert the query result to a list of DeviceDto objects
+        var userDtos = queryResult.Select(x =>
+        {
+            var userDto = ObjectMapper.Map<User, UserDto>(x);
+            
+            return userDto;
+        }).ToList();
+
+        // **Prepare the response DTO**
+        var result = new shared.PagedResultDto<UserDto>
+        {
+            TotalItems = totalCount,
+            TotalPages = totalPages,
+            Items = userDtos
+        };
+
+        return new OkObjectResult(result);
     }
 
 
@@ -195,5 +292,18 @@ public class UtenteAppService : CrudAppService<
         var res = ObjectMapper.Map<User, UserDetailedDto>(user);
         res.Policies = ObjectMapper.Map<List<Policy>, List<PolicyDto>>(settedPolicies);
         return new OkObjectResult(res);
+    }
+
+
+
+
+    private string ToPascalCase(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return input;
+        }
+
+        return char.ToUpper(input[0]) + input.Substring(1);
     }
 }

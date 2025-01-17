@@ -18,10 +18,12 @@
                           variant="outlined" max-width="500"
                           density="compact"
                           hide-details single-line rounded="lg"
-                          class="outlineTextField" base-color="surface">
+                          class="outlineTextField" base-color="surface"
+                          @input="filterByName"
+                          v-model="userName">
             </v-text-field>
 
-            <v-btn size="small" class="ml-6" @click="expandFilter = !expandFilter" icon="mdi-filter-multiple"></v-btn>
+            <!--<v-btn size="small" class="ml-6" @click="expandFilter = !expandFilter" icon="mdi-filter-multiple"></v-btn>-->
 
 
             <v-btn @click="onBtnAddClick()" color="primary" class="ml-auto">
@@ -30,30 +32,30 @@
 
 
             <!--<v-expand-transition>
-            <div v-show="expandFilter" class="w-100">
-                <div class="d-flex w-100 align-center justify-start ga-4 mt-4">
+                <div v-show="expandFilter" class="w-100">
+                    <div class="d-flex w-100 align-center justify-start ga-4 mt-4">
 
-                    <span>Filter by: </span>
+                        <span>Filter by: </span>
 
-                    <v-autocomplete :items="possibleUsers" v-model="selectedUsers" label="Created By:"
-                                    item-title="name" item-value="id" max-width="200" base-color="surface"
-                                    multiple clearable @update:modelValue="applyFilter"
-                                    density="compact" hide-details rounded="lg" variant="outlined">
-                    </v-autocomplete>
+                        <v-autocomplete :items="possibleUsers" v-model="selectedUsers" label="Created By:"
+                                        item-title="name" item-value="id" max-width="200" base-color="surface"
+                                        multiple clearable @update:modelValue="applyFilter"
+                                        density="compact" hide-details rounded="lg" variant="outlined">
+                        </v-autocomplete>
 
-                    <v-autocomplete :items="possibleUseCases" v-model="selectedUseCases" label="Use Case:"
-                                    item-title="name" item-value="id" max-width="200" base-color="surface"
-                                    multiple clearable @update:modelValue="applyFilter"
-                                    density="compact" hide-details rounded="lg" variant="outlined">
-                    </v-autocomplete>
+                        <v-autocomplete :items="possibleUseCases" v-model="selectedUseCases" label="Use Case:"
+                                        item-title="name" item-value="id" max-width="200" base-color="surface"
+                                        multiple clearable @update:modelValue="applyFilter"
+                                        density="compact" hide-details rounded="lg" variant="outlined">
+                        </v-autocomplete>
 
-                    <v-btn size="small" @click="removeFilter" :v-if="selectedUseCases.length !== 0 || selectedUsers.length !== 0"
-                           prepend-icon="mdi-close-circle-outline" variant="plain" style="margin-right: 12rem;">
-                        Clear
-                    </v-btn>
+                        <v-btn size="small" @click="removeFilter" :v-if="selectedUseCases.length !== 0 || selectedUsers.length !== 0"
+                               prepend-icon="mdi-close-circle-outline" variant="plain" style="margin-right: 12rem;">
+                            Clear
+                        </v-btn>
+                    </div>
                 </div>
-            </div>
-        </v-expand-transition>-->
+            </v-expand-transition>-->
         </v-row>
 
 
@@ -131,9 +133,19 @@
                 loadingState: false,
                 selectedUser: {},
 
+
+
                 //dialog property
                 showDeleteDialog: false,
                 showAddDialog: false,
+
+
+                //   === filter properties
+                expandFilter: false,
+                itemsPerPage: 10,
+                userName: null,
+
+
 
                 //   === table properties
                 loading: true,
@@ -233,7 +245,7 @@
 
 
             //    === table methods
-            refeshUserList() {
+            refeshUserList(options) {
                 console.log("ON getUsers");
 
 
@@ -244,10 +256,16 @@
 
                 //call to  getDevices
                 services.ApiCallerUsers
-                    .getUsers().then(res => {
+                    .getUsers(
+                        that.userName,
+                        options ? options.itemsPerPage : 10,
+                        options ? options.page : 1,
+                        options && options.sortBy[0] ? options.sortBy[0].key : null,
+                        options && options.sortBy[0] ? options.sortBy[0].order : null,)
+                    .then(res => {
                         //load userList
                         that.userList = res.data.items;
-                        that.totalItems = res.data.totalCount;
+                        that.totalItems = res.data.totalItems;
                         console.log("userList: ", that.userList);
                         console.log("totalItems: ", that.totalItems);
                     }).finally(_ => {
@@ -259,7 +277,6 @@
 
 
             },
-
 
             openContent(value, row) {
                 window.location.href = "users/" + row.item.id;
@@ -287,6 +304,14 @@
                 that.showAddDialog = true;
                 console.log("on onBtnAddClick");
 
+            },
+
+
+
+            //    === filter methods
+            filterByName() {
+                let that = this;
+                that.refeshUserList();
             },
 
 
@@ -337,7 +362,7 @@
                         //chiedo la lista dei device e riempio la userList
                         that.refeshUserList();
 
-                        
+
                     });
             },
 
