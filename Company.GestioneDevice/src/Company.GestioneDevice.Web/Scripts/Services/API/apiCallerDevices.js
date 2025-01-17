@@ -35,7 +35,7 @@
 		// Costruzione dell'URL completo
 		const urlToCall = `${this.url}device-list?${params.toString()}`;
 
-		console.log("on getDevices url:")
+		//console.log("on getDevices url:")
 
 		return this.restFulApiCallerHelper.callGet(urlToCall);
 	}
