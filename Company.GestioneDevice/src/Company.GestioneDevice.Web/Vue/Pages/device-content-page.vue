@@ -444,8 +444,8 @@
                 services.ApiCallerDevices
                     .getDevices().then(res => {
                         //load deviceList
-                        that.deviceList = res.data;
-                        that.totalItems = that.deviceList.length;
+                        that.deviceList = res.data.items;
+                        that.totalItems = res.data.totalItems;
                         console.log("deviceList: ", that.deviceList);
                         console.log("totalItems: ", that.totalItems);
 
