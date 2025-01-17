@@ -8,7 +8,7 @@
 	}
 
 
-	getDevices(types = [], userIds = [], itemsPerPage = 10, pageNumber = 1, sortByKey = null, sortByOrder = null) {
+	getDevices(types = [], userIds = [], deviceName = null, itemsPerPage = 10, pageNumber = 1, sortByKey = null, sortByOrder = null) {
 
 		if (sortByKey == 'user.username') {
 			sortByKey = 'userId'
@@ -30,6 +30,10 @@
 		if (sortByKey != null && sortByOrder != null) {
 			params.append('sortByKey', sortByKey);
 			params.append('sortByOrder', sortByOrder);
+		}
+
+		if (deviceName != null) {
+			params.append('deviceName', deviceName);
 		}
 
 		// Costruzione dell'URL completo

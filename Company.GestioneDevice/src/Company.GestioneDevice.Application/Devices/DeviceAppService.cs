@@ -94,40 +94,6 @@ public class DeviceAppService : CrudAppService<
     }
 
 
-    //public async Task<ActionResult<(long totalCount, List<DeviceDto> items)>> GetDeviceList()
-    //{
-    //    //Get the IQueryable<Device> from the repository
-    //    var queryable = await _repository.GetQueryableAsync();
-
-    //    //Prepare a query to join devices and users
-    //    var query = from device in queryable
-    //                join user in await _deviceManager.GetQueryableUsers() on device.UserId equals user.Id
-    //                select new { device, user };
-
-    //    //Paging
-    //    //query = query
-    //    //    .OrderBy(NormalizeSorting(input.Sorting))
-    //    //    .Skip(input.SkipCount)
-    //    //    .Take(input.MaxResultCount);
-
-    //    //Execute the query and get a list
-    //    var queryResult = await AsyncExecuter.ToListAsync(query);
-
-    //    //Convert the query result to a list of DeviceDto objects
-    //    var deviceDtos = queryResult.Select(x =>
-    //    {
-    //        var deviceDto = ObjectMapper.Map<Device, DeviceDto>(x.device);
-    //        deviceDto.User = ObjectMapper.Map<User, UserLookupDto>(x.user);
-    //        return deviceDto;
-    //    }).ToList();
-
-    //    //Get the total count with another query
-    //    // var totalCount = await _repository.GetCountAsync();
-
-    //    return new OkObjectResult(
-    //        (deviceDtos)
-    //    );
-    //}
 
     [HttpGet("api/app/device/device-list")]
     public async Task<ActionResult<shared.PagedResultDto<DeviceDto>>> GetDeviceList(
@@ -135,12 +101,13 @@ public class DeviceAppService : CrudAppService<
       [FromQuery] Guid[] userIds = null, // Array di UtentiDto
       [FromQuery] int pageNumber = 1, // Numero di pagina richiesto
       [FromQuery] int itemsPerPage = 10, // Numero di elementi per pagina
-         [FromQuery] string sortByKey = "Id",  // Valore predefinito per Key
-    [FromQuery] string sortByOrder = "asc" // Valore predefinito per Order
-  )
+      [FromQuery] string sortByKey = "Id",  // Valore predefinito per Key
+      [FromQuery] string sortByOrder = "asc", // Valore predefinito per Order
+      [FromQuery] string deviceName = null // Valore predefinito per Order
+    )
     {
 
-       
+
 
 
         // Get the IQueryable<Device> from the repository
@@ -162,6 +129,12 @@ public class DeviceAppService : CrudAppService<
             query = query.Where(x => userIds.Contains(x.user.Id));
         }
 
+
+        if (deviceName != null)
+        {
+            query = query.Where(x => x.device.Name.Contains(deviceName));
+        }
+
         // Applica ordinamento dinamico
         var allowedKeys = new[] { "name", "type", "model", "creationtime", "userid" }; // Campi accettabili
 
@@ -181,11 +154,11 @@ public class DeviceAppService : CrudAppService<
             else
             {
                 // Usa "device.<key>" per specificare esplicitamente il percorso
-            query = query.AsQueryable().OrderBy($"device.{key} {order}");
+                query = query.AsQueryable().OrderBy($"device.{key} {order}");
 
             }
 
-            
+
         }
         else
         {
@@ -196,8 +169,10 @@ public class DeviceAppService : CrudAppService<
         // **Calculate total count**
         var totalCount = await AsyncExecuter.CountAsync(query);
 
-        // **Calculate total pages**
-        var totalPages = (int)Math.Ceiling((double)totalCount / itemsPerPage);
+        // Calcola il numero totale di pagine
+        var totalPages = totalCount > 0
+            ? (int)Math.Ceiling((double)totalCount / itemsPerPage)
+            : 1; // Almeno una pagina anche se vuota
 
         // Ensure pageNumber is within bounds
         if (pageNumber < 1)
@@ -210,7 +185,7 @@ public class DeviceAppService : CrudAppService<
         }
 
         // **Calculate skipCount**
-        var skipCount = (pageNumber - 1) * itemsPerPage;
+        var skipCount = Math.Max(0, (pageNumber - 1) * itemsPerPage);
 
         // Apply paging to the query
         query = query

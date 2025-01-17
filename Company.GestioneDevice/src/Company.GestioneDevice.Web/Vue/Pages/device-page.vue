@@ -16,9 +16,11 @@
 
             <v-text-field label="Search" prepend-inner-icon="mdi-magnify"
                           variant="outlined" max-width="500"
-                          density="compact"
+                          density="compact" clearable
                           hide-details single-line rounded="lg"
-                          class="outlineTextField" base-color="surface">
+                          class="outlineTextField" base-color="surface"
+                          @input="filterByName"
+                          v-model="deviceName">
             </v-text-field>
 
             <v-btn size="small" class="ml-6" @click="expandFilter = !expandFilter" icon="mdi-filter-multiple"></v-btn>
@@ -171,7 +173,7 @@
                 types: [],
                 userIds: [],
                 itemsPerPage: 10,
-
+                deviceName: null,
 
 
                 //   === table properties
@@ -297,6 +299,7 @@
                     .getDevices(
                         that.types,
                         that.userIds,
+                        that.deviceName,
                         options ? options.itemsPerPage : 10,
                         options ? options.page : 1,
                         options && options.sortBy[0] ? options.sortBy[0].key : null,
@@ -359,6 +362,13 @@
                     }
                 });
             },
+
+            filterByName() {
+                let that = this;
+                that.refeshDeviceList();
+            },
+
+
 
             //btn methods
             onBtnDeleteClick(item) {
