@@ -208,13 +208,13 @@
                     {
                         title: "Owner",
                         align: 'center',
-                        sortable: false,
+                        sortable: true,
                         key: 'user.username'
                     },
                     {
                         title: "Create Time",
                         align: 'center',
-                        sortable: false,
+                        sortable: true,
                         key: 'creationTime'
                     },
                     {
@@ -298,7 +298,9 @@
                         that.types,
                         that.userIds,
                         options ? options.itemsPerPage : 10,
-                        options ? options.page : 1)
+                        options ? options.page : 1,
+                        options.sortBy[0] ? options.sortBy[0].key : null,
+                        options.sortBy[0] ? options.sortBy[0].order : null,)
                     .then(res => {
                         //load deviceList
                         that.deviceList = res.data.items;

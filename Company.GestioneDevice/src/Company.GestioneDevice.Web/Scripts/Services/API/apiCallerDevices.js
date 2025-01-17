@@ -8,7 +8,12 @@
 	}
 
 
-	getDevices(types = [], userIds = [], itemsPerPage = 10, pageNumber = 1) {
+	getDevices(types = [], userIds = [], itemsPerPage = 10, pageNumber = 1, sortByKey = null, sortByOrder = null) {
+
+		if (sortByKey == 'user.username') {
+			sortByKey = 'userId'
+		}
+
 		// Costruzione dei query params
 		const params = new URLSearchParams();
 
@@ -22,10 +27,15 @@
 		params.append('itemsPerPage', itemsPerPage);
 		params.append('pageNumber', pageNumber);
 
+		if (sortByKey != null && sortByOrder != null) {
+			params.append('sortByKey', sortByKey);
+			params.append('sortByOrder', sortByOrder);
+		}
+
 		// Costruzione dell'URL completo
 		const urlToCall = `${this.url}device-list?${params.toString()}`;
 
-
+		console.log("on getDevices url:")
 
 		return this.restFulApiCallerHelper.callGet(urlToCall);
 	}

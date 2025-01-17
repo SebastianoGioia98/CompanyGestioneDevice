@@ -22,6 +22,7 @@ using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
 using Volo.Abp.Validation;
 using Company.GestioneDevice.shared;
+using System.Linq.Dynamic.Core;
 
 
 namespace Company.GestioneDevice.Devices;
@@ -133,9 +134,14 @@ public class DeviceAppService : CrudAppService<
       [FromQuery] DeviceType[] types = null, // Array di tipi
       [FromQuery] Guid[] userIds = null, // Array di UtentiDto
       [FromQuery] int pageNumber = 1, // Numero di pagina richiesto
-      [FromQuery] int itemsPerPage = 10 // Numero di elementi per pagina
+      [FromQuery] int itemsPerPage = 10, // Numero di elementi per pagina
+         [FromQuery] string sortByKey = "Id",  // Valore predefinito per Key
+    [FromQuery] string sortByOrder = "asc" // Valore predefinito per Order
   )
     {
+
+       
+
 
         // Get the IQueryable<Device> from the repository
         var queryable = await _repository.GetQueryableAsync();
@@ -156,8 +162,36 @@ public class DeviceAppService : CrudAppService<
             query = query.Where(x => userIds.Contains(x.user.Id));
         }
 
-        // **Add ordering to the query**
-        query = query.OrderBy(x => x.device.Id); // Ordina per ID del dispositivo o qualsiasi altra proprietà unica
+        // Applica ordinamento dinamico
+        var allowedKeys = new[] { "name", "type", "model", "creationtime", "userid" }; // Campi accettabili
+
+        if (sortByKey != null && !string.IsNullOrWhiteSpace(sortByKey) && !string.IsNullOrWhiteSpace(sortByOrder) &&
+            allowedKeys.Contains(sortByKey.ToLower()))
+        {
+            var key = ToPascalCase(sortByKey); // Converte "type" in "Type"
+            var order = sortByOrder.ToLower();
+
+
+            if (sortByKey == "userId")
+            {
+                key = "Id";
+                // Usa "user.<key>" per specificare esplicitamente il percorso
+                query = query.AsQueryable().OrderBy($"user.{key} {order}");
+            }
+            else
+            {
+                // Usa "device.<key>" per specificare esplicitamente il percorso
+            query = query.AsQueryable().OrderBy($"device.{key} {order}");
+
+            }
+
+            
+        }
+        else
+        {
+            // Default sorting (se il parametro sortBy non è presente o non è valido)
+            query = query.OrderBy(x => x.device.Id);
+        }
 
         // **Calculate total count**
         var totalCount = await AsyncExecuter.CountAsync(query);
@@ -446,5 +480,18 @@ public class DeviceAppService : CrudAppService<
         var res = new DeviceGeolocalizationDto(44.412998, 8.945222);
 
         return res;
+    }
+
+
+
+
+    private string ToPascalCase(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return input;
+        }
+
+        return char.ToUpper(input[0]) + input.Substring(1);
     }
 }
