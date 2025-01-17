@@ -29,31 +29,34 @@
             </v-btn>
 
 
-            <!--<v-expand-transition>
-            <div v-show="expandFilter" class="w-100">
-                <div class="d-flex w-100 align-center justify-start ga-4 mt-4">
+            <v-expand-transition>
+                <div v-show="expandFilter" class="w-100">
+                    <div class="d-flex w-100 align-start justify-start ga-4 mt-4">
 
-                    <span>Filter by: </span>
+                        <span class="align-self-center">Filter by: </span>
 
-                    <v-autocomplete :items="possibleUsers" v-model="selectedUsers" label="Created By:"
-                                    item-title="name" item-value="id" max-width="200" base-color="surface"
-                                    multiple clearable @update:modelValue="applyFilter"
-                                    density="compact" hide-details rounded="lg" variant="outlined">
-                    </v-autocomplete>
+                        <v-autocomplete :items="typeList" v-model="types" label="Type:"
+                                        item-title="name" item-value="value" max-width="250"
+                                        multiple clearable @blur="applyFilter" @click:clear="onFilterClear"
+                                        density="compact" hide-details rounded="lg" variant="solo-filled"
+                                        ref="typeAutocomplete">
+                        </v-autocomplete>
 
-                    <v-autocomplete :items="possibleUseCases" v-model="selectedUseCases" label="Use Case:"
-                                    item-title="name" item-value="id" max-width="200" base-color="surface"
-                                    multiple clearable @update:modelValue="applyFilter"
-                                    density="compact" hide-details rounded="lg" variant="outlined">
-                    </v-autocomplete>
+                        <v-autocomplete :items="userList" v-model="userIds" label="Owner:"
+                                        item-title="username" item-value="id" max-width="250"
+                                        multiple clearable @blur="applyFilter" @click:clear="onFilterClear"
+                                        density="compact" hide-details rounded="lg" variant="solo-filled"
+                                        ref="userAutocomplete">
+                        </v-autocomplete>
 
-                    <v-btn size="small" @click="removeFilter" :v-if="selectedUseCases.length !== 0 || selectedUsers.length !== 0"
-                           prepend-icon="mdi-close-circle-outline" variant="plain" style="margin-right: 12rem;">
-                        Clear
-                    </v-btn>
+                        <v-btn size="small" @click="removeFilter" :v-if="types.length !== 0 || userIds.length !== 0"
+                               prepend-icon="mdi-close-circle-outline" variant="plain" style="margin-right: 12rem;"
+                               class="align-self-center">
+                            Clear
+                        </v-btn>
+                    </div>
                 </div>
-            </div>
-        </v-expand-transition>-->
+            </v-expand-transition>
         </v-row>
 
 
@@ -130,19 +133,50 @@
                 deviceList: [],
                 featureList: [],
                 userList: [],
+                typeList: [
+                    {
+                        name: 'Laptop',
+                        value: 0
+                    },
+                    {
+                        name: 'Smartphone',
+                        value: 1
+                    },
+                    {
+                        name: 'Smartwatch',
+                        value: 2
+                    },
+                    {
+                        name: 'Tablet',
+                        value: 3
+                    }
+                ],
+
+
 
                 //state property
                 loadingState: false,
                 selectedDevice: {},
 
+
+
                 //dialog property
                 showDeleteDialog: false,
                 showAddDialog: false,
 
+
+
+                //   === filter properties
+                expandFilter: false,
+                types: [],
+                userIds: [],
+                itemsPerPage: 10,
+
+
+
                 //   === table properties
                 loading: true,
                 totalItems: 0,
-                itemsPerPage: 10,
                 headers: [
                     {
                         title: "Name",
@@ -198,6 +232,8 @@
                     { value: 100, title: '100' }
                 ],
 
+
+
                 //snackbar
                 snackbarOpt: {
                     snackbar: false,
@@ -224,7 +260,7 @@
                 .getFeatureList().then(res => {
                     //load featureList
                     that.featureList = res.data.items;
-                    
+
                     console.log("featureList : ", that.featureList);
                 });
 
@@ -242,21 +278,31 @@
 
 
             //    === table methods
-            refeshDeviceList() {
+            refeshDeviceList(options) {
                 console.log("ON getDevices");
-
+                console.log('Options:', options);
 
                 let that = this;
+
+                //reset itemsPerPage
+                if (!options) {
+                    that.itemsPerPage = 10;
+                }
 
                 //SET Loading State
                 that.loading = true;
 
                 //call to  getDevices
                 services.ApiCallerDevices
-                    .getDevices().then(res => {
+                    .getDevices(
+                        that.types,
+                        that.userIds,
+                        options ? options.itemsPerPage : 10,
+                        options ? options.page : 1)
+                    .then(res => {
                         //load deviceList
-                        that.deviceList = res.data;
-                        that.totalItems = that.deviceList.length;
+                        that.deviceList = res.data.items;
+                        that.totalItems = res.data.totalItems;
                         console.log("deviceList: ", that.deviceList);
                         console.log("totalItems: ", that.totalItems);
                     }).finally(_ => {
@@ -269,15 +315,48 @@
 
             },
 
-            openContent() {
-
-            },
-
             openContent(value, row) {
                 window.location.href = "devices/" + row.item.id;
             },
 
 
+
+
+            //    === filter methods
+            removeFilter() {
+                let that = this;
+
+                //reset filters
+                that.types = [];
+                that.userIds = [];
+                that.itemsPerPage = 10;
+
+                that.refeshDeviceList();
+            },
+
+            applyFilter() {
+                let that = this;
+
+                console.log("On ApplyFilter: ");
+                console.log("types: ", that.types);
+                console.log("userIds: ", that.userIds);
+
+                that.refeshDeviceList();
+            },
+
+            onFilterClear() {
+                console.log("on Filter Clear");
+
+                // Attiva manualmente il blur
+                this.$nextTick(() => {
+                    if (this.$refs.typeAutocomplete) {
+                        this.$refs.typeAutocomplete.blur();
+                    }
+                    if (this.$refs.userAutocomplete) {
+                        this.$refs.userAutocomplete.blur();
+                    }
+                });
+            },
 
             //btn methods
             onBtnDeleteClick(item) {
@@ -354,7 +433,7 @@
 
                         //lancio la snackbar
                         that.snackbarOpt = snackOpt;
-                 
+
                     });
             },
 
@@ -409,11 +488,12 @@
                     });
             },
 
+
+
             //    === other mothods
             getDate(dateString) {
                 return services.formatDateTime(dateString);
             },
-
 
             getDeviceType(type) {
                 return services.getDeviceType(type);

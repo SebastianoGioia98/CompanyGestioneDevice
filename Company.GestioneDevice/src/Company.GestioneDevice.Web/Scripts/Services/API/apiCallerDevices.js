@@ -8,8 +8,25 @@
 	}
 
 
-	getDevices() {
-		const urlToCall = this.url + `device-list`;
+	getDevices(types = [], userIds = [], itemsPerPage = 10, pageNumber = 1) {
+		// Costruzione dei query params
+		const params = new URLSearchParams();
+
+		// Aggiungi i parametri solo se sono presenti
+		if (types.length > 0) {
+			types.forEach(type => params.append('types', type));
+		}
+		if (userIds.length > 0) {
+			userIds.forEach(userId => params.append('userIds', userId));
+		}
+		params.append('itemsPerPage', itemsPerPage);
+		params.append('pageNumber', pageNumber);
+
+		// Costruzione dell'URL completo
+		const urlToCall = `${this.url}device-list?${params.toString()}`;
+
+
+
 		return this.restFulApiCallerHelper.callGet(urlToCall);
 	}
 	

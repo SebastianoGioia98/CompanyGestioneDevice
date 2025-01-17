@@ -1,9 +1,9 @@
 <template>
     <v-dialog min-width="350" max-width="800"
               :modelValue="modelValue"
-              persistent>
+              persistent >
         <v-card prepend-icon="mdi-plus-box" title="Add New Device"
-                text="Fill the fields and press add">
+                text="Fill the fields and press add" rounded="lg">
 
             <v-card-text>
                 <v-form v-model="addDeviceFormValid" ref="addDeviceForm">
@@ -17,7 +17,8 @@
                                               :rules="[v => !!v || 'Name is required']"
                                               @input="validateAddDeviceForm"
                                               required
-                                              variant="solo-filled">
+                                              variant="solo-filled"
+                                              rounded="lg">
                                 </v-text-field>
                             </v-col>
 
@@ -30,7 +31,8 @@
                                           :rules="[v => v !== null && v !== undefined || 'Type is required']"
                                           @blur="validateAddDeviceForm"
                                           required
-                                          variant="solo-filled">
+                                          variant="solo-filled"
+                                          rounded="lg">
                                 </v-select>
                             </v-col>
 
@@ -45,7 +47,8 @@
                                               :rules="[v => !!v || 'Model is required']"
                                               @input="validateAddDeviceForm"
                                               required
-                                              variant="solo-filled">
+                                              variant="solo-filled"
+                                              rounded="lg">
                                 </v-text-field>
                             </v-col>
 
@@ -57,7 +60,8 @@
                                           :items="userList"
                                           :rules="[v => !!v || 'User is required']"
                                           @blur="validateAddDeviceForm"
-                                          variant="solo-filled">
+                                          variant="solo-filled"
+                                          rounded="lg">
                                 </v-select>
                             </v-col>
 
@@ -72,7 +76,8 @@
                                               :rules="[v => !!v || 'Name is required']"
                                               @input="validateAddDeviceForm"
                                               required
-                                              variant="solo-filled">
+                                              variant="solo-filled"
+                                              rounded="lg">
                                 </v-text-field>
                             </v-col>
 
@@ -84,7 +89,8 @@
                                               :rules="[v => !!v || 'Version is required']"
                                               @input="validateAddDeviceForm"
                                               required
-                                              variant="solo-filled">
+                                              variant="solo-filled"
+                                              rounded="lg">
                                 </v-text-field>
                             </v-col>
                         </v-row>
@@ -99,7 +105,8 @@
                                           multiple
                                           @blur="validateAddDeviceForm"
                                           required
-                                          variant="solo-filled">
+                                          variant="solo-filled"
+                                          rounded="lg">
                                 </v-select>
                             </v-col>
                         </v-row>

@@ -130,7 +130,7 @@ public class DeviceAppService : CrudAppService<
 
     [HttpGet("api/app/device/device-list")]
     public async Task<ActionResult<shared.PagedResultDto<DeviceDto>>> GetDeviceList(
-      [FromQuery] DeviceType[] type = null, // Array di tipi
+      [FromQuery] DeviceType[] types = null, // Array di tipi
       [FromQuery] Guid[] userIds = null, // Array di UtentiDto
       [FromQuery] int pageNumber = 1, // Numero di pagina richiesto
       [FromQuery] int itemsPerPage = 10 // Numero di elementi per pagina
@@ -146,9 +146,9 @@ public class DeviceAppService : CrudAppService<
                     select new { device, user };
 
         // Apply filters
-        if (type != null && type.Length > 0)
+        if (types != null && types.Length > 0)
         {
-            query = query.Where(x => type.Contains(x.device.Type));
+            query = query.Where(x => types.Contains(x.device.Type));
         }
 
         if (userIds != null && userIds.Length > 0)
@@ -197,7 +197,7 @@ public class DeviceAppService : CrudAppService<
         // **Prepare the response DTO**
         var result = new shared.PagedResultDto<DeviceDto>
         {
-            TotalCount = totalCount,
+            TotalItems = totalCount,
             TotalPages = totalPages,
             Items = deviceDtos
         };
