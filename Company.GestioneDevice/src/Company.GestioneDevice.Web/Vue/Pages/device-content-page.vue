@@ -52,7 +52,7 @@
                         </template>
                     </v-list-item>
                     <v-list-item class="listItem">
-                        <v-list-item-title @click="onBtnUpdateDeviceClick = true">Update Device Software</v-list-item-title>
+                        <v-list-item-title @click="onBtnUpdateDeviceClick">Update Device Software</v-list-item-title>
                         <template v-slot:prepend>
                             <v-icon icon="mdi-update" @click="onBtnUpdateDeviceClick"></v-icon>
                         </template>
