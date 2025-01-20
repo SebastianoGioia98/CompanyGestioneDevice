@@ -264,7 +264,7 @@
 
 
         <!--    Software History   -->
-        <v-dialog min-width="500" max-width="400"
+        <v-dialog min-width="550" max-width="600"
                   :modelValue="showSoftwareHistoryDialog"
                   persistent>
             <v-card prepend-icon="mdi-update" title="Device Software Update History">
@@ -287,7 +287,7 @@
                                 </div>
 
                                 <div class="text-body font-weight-bold">
-                                    {{getDate(deviceDetail.creationTime)}}
+                                    {{getDate(softVer.creationTime)}}
                                 </div>
                             </div>
 

@@ -381,7 +381,14 @@ public class DeviceAppService : CrudAppService<
         //find device
         var query = from dev in queryable
                     where dev.Id == id
-                    select dev;
+                    select new
+                    {
+                        Device = dev,
+                        SoftwareVersions = dev.SoftwareVersions
+                     .OrderByDescending(sv => sv.CreationTime)
+                    .ToList(), // Ordiniamo qui le SoftwareVersions
+                        DeviceFeatures = dev.DeviceFeatures.ToList()
+                    };
 
         var device = await AsyncExecuter.FirstOrDefaultAsync(query);
 
