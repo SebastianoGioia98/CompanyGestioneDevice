@@ -20,7 +20,8 @@
                           hide-details single-line rounded="lg"
                           class="outlineTextField" base-color="surface"
                           @input="filterByName"
-                          v-model="deviceName">
+                          v-model="deviceName"
+                          @click:clear="filterByName">
             </v-text-field>
 
             <v-btn size="small" class="ml-6" @click="expandFilter = !expandFilter" icon="mdi-filter-multiple"></v-btn>
