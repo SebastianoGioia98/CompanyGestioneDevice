@@ -24,7 +24,7 @@
                           @click:clear="filterByName">
             </v-text-field>
 
-            <v-btn size="small" class="ml-6" @click="expandFilter = !expandFilter" icon="mdi-filter-multiple"></v-btn>
+            <v-btn size="small" class="ml-6" @click="expandFilter = !expandFilter" icon="mdi-filter-menu"></v-btn>
 
 
             <v-btn @click="onBtnAddClick()" color="primary" class="ml-auto">
@@ -40,23 +40,33 @@
 
                         <v-autocomplete :items="typeList" v-model="types" label="Type:"
                                         item-title="name" item-value="value" max-width="250"
-                                        multiple clearable @blur="applyFilter" @click:clear="onFilterClear"
+                                        multiple clearable @blur="" @click:clear="onFilterClear"
                                         density="compact" hide-details rounded="lg" variant="solo-filled"
                                         ref="typeAutocomplete">
                         </v-autocomplete>
 
                         <v-autocomplete :items="userList" v-model="userIds" label="Owner:"
                                         item-title="username" item-value="id" max-width="250"
-                                        multiple clearable @blur="applyFilter" @click:clear="onFilterClear"
+                                        multiple clearable @blur="" @click:clear="onFilterClear"
                                         density="compact" hide-details rounded="lg" variant="solo-filled"
                                         ref="userAutocomplete">
                         </v-autocomplete>
 
-                        <v-btn size="small" @click="removeFilter" :v-if="types.length !== 0 || userIds.length !== 0"
-                               prepend-icon="mdi-close-circle-outline" variant="plain" style="margin-right: 12rem;"
+
+
+                        <v-btn size="small" @click="applyFilter"
+                               prepend-icon="mdi-filter-check-outline" variant="plain"
+                               class="align-self-center" :disabled="isBtnApplyFilterDisabled">
+                            Apply Filters
+                        </v-btn>
+
+                        <v-btn size="small" @click="removeFilter"
+                               prepend-icon="mdi-filter-remove-outline" variant="plain"
                                class="align-self-center">
                             Clear
                         </v-btn>
+
+
                     </div>
                 </div>
             </v-expand-transition>
@@ -250,7 +260,12 @@
 
         },
         computed: {
-
+           
+            isBtnApplyFilterDisabled() {
+                let that = this;
+                return (!that.userIds || that.userIds.length === 0) && (!that.types || that.types.length === 0);
+            }
+     
         },
         created() {
             let that = this;
@@ -351,6 +366,7 @@
             },
 
             onFilterClear() {
+                let that = this;
                 console.log("on Filter Clear");
 
                 // Attiva manualmente il blur
@@ -362,6 +378,8 @@
                         this.$refs.userAutocomplete.blur();
                     }
                 });
+
+                that.refeshDeviceList();
             },
 
             filterByName() {
