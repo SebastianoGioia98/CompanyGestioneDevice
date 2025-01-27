@@ -53,7 +53,7 @@ public class DeviceAppService : CrudAppService<
 
 
     //Methods
-
+    [HttpPost]
     public async Task<ActionResult<DeviceDetailedDto>> CreateDeviceWithDetails(CreateDeviceDto input)
     {
 
